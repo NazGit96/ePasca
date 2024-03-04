@@ -1,0 +1,506 @@
+<app-breadcrumb
+  [title]="'Kemaskini Bantuan Wang Ihsan Kawasan'"
+  [items]="['Pengurusan Tabung', 'BWI']"
+  [active_item]="'Kemaskini'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+          <form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+            <h6>Maklumat Ketua Isi Rumah</h6>
+
+            <div class="row no-gutters align-items-center mt-3">
+              <div class="primeng-datatable-container">
+                <p-table
+                  #dataTable
+                  styleClass="p-datatable-striped"
+                  [resizableColumns]="true"
+                  (onLazyLoad)="getKir($event)"
+                  [value]="primengTableHelper.records"
+                  rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                  [paginator]="false"
+                  [lazy]="true"
+                  [loading]="primengTableHelper.isLoading"
+                  [scrollable]="true"
+                  ScrollWidth="100%"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 130px" pSortableColumn="no_kp">
+                        No. KP
+                        <p-sortIcon field="no_kp"></p-sortIcon>
+                      </th>
+                      <th style="width: 150px" pSortableColumn="nama">
+                        Nama KIR
+                        <p-sortIcon field="nama"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="jumlah_bwi">
+                        Jumlah BWI
+                        <p-sortIcon field="jumlah_bwi"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="nama_daerah">
+                        Daerah
+                        <p-sortIcon field="nama_daerah"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="nama_negeri">
+                        Negeri
+                        <p-sortIcon field="nama_negeri"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="status_mangsa_wang_ihsan">
+                        Status
+                        <p-sortIcon field="status_mangsa_wang_ihsan"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-record="$implicit">
+                    <tr>
+                      <td style="width: 130px">
+                        <span class="p-column-title">No. KP</span>
+                        {{record.no_kp}}
+                      </td>
+                      <td style="width: 150px">
+                        <span class="p-column-title">Nama KIR</span>
+                        {{record.nama}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Jumlah BWI</span>
+                        RM {{record.jumlah}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Daerah</span>
+                        {{record.nama_daerah}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Negeri</span>
+                        {{record.nama_negeri}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Status</span>
+                        {{getStatus(record.status_mangsa_wang_ihsan)}}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">Tiada Data</div>
+                <div class="primeng-paging-container justify-content-between">
+                  <p-paginator
+                    [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                    #paginator
+                    (onPageChange)="getKir($event)"
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                  ></p-paginator>
+                  <span class="total-records-count">
+                    Jumlah: {{ primengTableHelper.totalRecordsCount}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Dibayar</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_dibayar"
+                    placeholder="0.00"
+                    [(ngModel)]="jumlahDibayar"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Bil. Dibayar (KIR)</label>
+                  <input
+                    class="form-control"
+                    name="bil_dibayar"
+                    placeholder="Bil. Dibayar (KIR)"
+                    [(ngModel)]="bilDibayar"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Belum Dibayar</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_belum_dibayar"
+                    placeholder="0.00"
+                    [(ngModel)]="jumlahBelumDibayar"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Bil. Belum Dibayar (KIR)</label>
+                  <input
+                    class="form-control"
+                    name="bil_belum_dibayar"
+                    placeholder="Bil. Belum Dibayar (KIR)"
+                    [(ngModel)]="bilBelumDibayar"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Dipulangkan</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_dipulangkan"
+                    placeholder="0.00"
+                    [(ngModel)]="jumlahDipulangkan"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Bil. Dipulangkan (KIR)</label>
+                  <input
+                    class="form-control"
+                    name="bil_dipulangkan"
+                    placeholder="Bil. Dipulangkan (KIR)"
+                    [(ngModel)]="bilDipulangkan"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
+
+            <div class="row">
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh EFT/Pengeluaran</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp"
+                    [(ngModel)]="modelEft"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate"
+                    #d="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelEft = today; d.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Tutup</button>
+              </ng-template>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Due Report (21 Hari)</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="due"
+                    [(ngModel)]="modelDueReport"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate1"
+                    #e="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="e.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate1>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelDueReport = today; e.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="e.close()">Tutup</button>
+              </ng-template>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>Catatan</label>
+                  <textarea
+                    class="form-control input-air-primary"
+                    rows="3"
+                    placeholder="Catatan"
+                    name="catatan"
+                    [(ngModel)]="bantuanKawasan.catatan"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <hr >
+
+            <h6 *ngIf="idJenisBwi != 2">Memo Perakuan KP</h6>
+            <div class="row" *ngIf="idJenisBwi != 2">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>No. Rujukan</label>
+                  <input
+                    class="form-control"
+                    name="rujukan_akuan_kp"
+                    type="text"
+                    placeholder="No. Rujukan"
+                    [(ngModel)]="bantuanKawasan.no_rujukan_akuan_kp"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Perakuan</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp1"
+                    [(ngModel)]="modelPerakuan"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate2"
+                    #d1="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d1.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate2>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelPerakuan = today; d1.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d1.close()">Tutup</button>
+              </ng-template>
+            </div>
+            <hr *ngIf="idJenisBwi != 2">
+
+            <h6>Memo Penyaluran KPD BKP</h6>
+            <div class="row">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>No. Rujukan</label>
+                  <input
+                    class="form-control"
+                    name="rujukan_saluran"
+                    type="text"
+                    placeholder="No. Rujukan"
+                    [(ngModel)]="bantuanKawasan.no_rujukan_saluran_kpd_bkp"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Penyaluran</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp2"
+                    [(ngModel)]="modelPenyaluran"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate3"
+                    #d2="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d2.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate3>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelPenyaluran = today; d2.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d2.close()">Tutup</button>
+              </ng-template>
+            </div>
+            <hr />
+
+            <h6>Memo Laporan KPD BKP</h6>
+            <div class="row">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>No. Rujukan</label>
+                  <input
+                    class="form-control"
+                    name="rujukan_laporan"
+                    type="text"
+                    placeholder="No. Rujukan"
+                    [(ngModel)]="bantuanKawasan.no_rujukan_laporan_kpd_bkp"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Laporan</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp3"
+                    [(ngModel)]="modelLaporan"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate4"
+                    #d3="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d3.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate4>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelLaporan = today; d3.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d3.close()">Tutup</button>
+              </ng-template>
+            </div>
+            <hr *ngIf="idJenisBwi != 2">
+
+            <h6 *ngIf="idJenisBwi != 2">Surat Makluman Tarikh Majlis</h6>
+            <div class="row" *ngIf="idJenisBwi != 2">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>No. Rujukan</label>
+                  <input
+                    class="form-control"
+                    name="rujukan_majlis"
+                    type="text"
+                    placeholder="No. Rujukan"
+                    [(ngModel)]="bantuanKawasan.no_rujukan_makluman_majlis"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Makluman Majlis</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp4"
+                    [(ngModel)]="modelMaklumanMajlis"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate5"
+                    #d4="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d4.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate5>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelMaklumanMajlis = today; d4.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d4.close()">Tutup</button>
+              </ng-template>
+            </div>
+
+            <div class="row" *ngIf="idJenisBwi != 2">
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Majlis</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp5"
+                    [(ngModel)]="modelMajlis"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate6"
+                    #d5="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d5.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate6>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelMajlis = today; d5.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d5.close()">Tutup</button>
+              </ng-template>
+            </div>
+            <hr *ngIf="idJenisBwi != 2">
+
+            <h6 *ngIf="idJenisBwi != 2">Surat Laporan Majlis DRP APM</h6>
+            <div class="row" *ngIf="idJenisBwi != 2">
+              <div class="col-lg-6 mt-2">
+                <div class="form-group">
+                  <label>No. Rujukan</label>
+                  <input
+                    class="form-control"
+                    name="rujukan_surat_laporan_majlis"
+                    type="text"
+                    placeholder="No. Rujukan"
+                    [(ngModel)]="bantuanKawasan.no_rujukan_majlis_drp_apm"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Surat Laporan</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="tarikhSuratLaporan"
+                    [(ngModel)]="modelSuratLaporan"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate7"
+                    #sl="ngbDatepicker"
+                    style="border-color: #efefef;"
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="sl.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate7>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="modelSuratLaporan = today; sl.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="sl.close()">Tutup</button>
+              </ng-template>
+            </div>
+
+            <div class="row justify-content-end mr-2">
+              <button type="button" class="btn btn-light pull-right mr-2" [routerLink]="['/app/tabung/bwi/edit']" [queryParams]="{id: idBwi, idBencana: idBencana}">
+                Kembali
+              </button>
+              <button class="btn btn-primary pull-right" type="submit">
+                Simpan
+              </button>
+            </div>
+          </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

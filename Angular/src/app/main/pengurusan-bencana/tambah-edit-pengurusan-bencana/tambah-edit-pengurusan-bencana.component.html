@@ -1,0 +1,171 @@
+<app-breadcrumb *ngIf="idBencana"
+	[title]="'Kemaskini Bencana'"
+	[items]="['Pengurusan Bencana']"
+	[active_item]="'Kemaskini'"
+></app-breadcrumb>
+<app-breadcrumb *ngIf="!idBencana"
+	[title]="'Tambah Bencana'"
+	[items]="['Pengurusan Bencana']"
+	[active_item]="'Tambah'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+            <div class="row">
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Kejadian*</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp"
+                    [(ngModel)]="model"
+                    ngbDatepicker
+                    [footerTemplate]="footerTemplate"
+                    #d="ngbDatepicker"
+                    style="border-color: #efefef;"
+                    #tarikhBencana="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && tarikhBencana.invalid }"
+                    required
+                  >
+                  <div class="input-group-append">
+                    <button class="btn btn-light" (click)="d.toggle()" type="button"><i
+                      class="fa fa-calendar"></i></button>
+                  </div>
+                  <div *ngIf="f.submitted && tarikhBencana.invalid" class="invalid-feedback">
+                    <div *ngIf="tarikhBencana.errors.required">Tarikh Kejadian Wajib Dipilih</div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #footerTemplate>
+                <hr class="my-0">
+                <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Hari Ini</button>
+                <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Tutup</button>
+              </ng-template>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jenis Bencana*</label>
+                  <ng-select
+                    [items]="disasters"
+                    bindLabel="nama_jenis_bencana"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="bencana.id_jenis_bencana"
+                    [(ngModel)]="bencana.id_jenis_bencana"
+                    #jenisBencana="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && jenisBencana.invalid }"
+                    (change)="namaBencana($event.nama_jenis_bencana)"
+                    required
+                  ></ng-select>
+                  <div *ngIf="f.submitted && jenisBencana.invalid" class="invalid-feedback">
+                    <div *ngIf="jenisBencana.errors.required">Jenis Bencana Wajib Dipilih</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6" *ngIf="idBencana">
+                <div class="form-group">
+                  <label>Status*</label>
+                  <ng-select
+                    [items]="statuses"
+                    bindLabel="nama"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="status_bencana"
+                    [(ngModel)]="bencana.status_bencana"
+                    #status="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && status.invalid }"
+                    required
+                  ></ng-select>
+                  <div *ngIf="f.submitted && status.invalid" class="invalid-feedback">
+                    <div *ngIf="status.errors.required">Status Wajib Dipilih</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label>Catatan</label>
+                  <textarea
+                    class="form-control"
+                    id="catatan_bencana"
+                    type="text"
+                    name="catatan"
+                    placeholder="Catatan..."
+                    [(ngModel)]="bencana.catatan"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <hr/>
+            <div  [ngClass]="{ 'invalid-border ng-invalid' : f.submitted && this.negeri.length  == 0}">
+              <div class="row mt-2">
+                <div class="col-12">
+                  <h6>Negeri Terlibat</h6>
+                </div>
+                <div class="col-12">
+                  <div class="checkbox checkbox-dark pl-2">
+                    <input
+                      class="checkbox_animated"
+                      id="chk-ani"
+                      type="checkbox"
+                      (change)="pilihSemuaNegeri($event.target.checked)"
+                    />
+                    <label for="chk-ani">Pilih Semua Negeri</label>
+                  </div>
+                </div>
+                <div class="col-6" *ngFor="let state of state; let i = index">
+                  <div class="checkbox checkbox-dark pl-2">
+                    <input *ngIf="idBencana"
+                      class="checkbox_animated"
+                      id="negeri-{{ i }}"
+                      type="checkbox"
+                      [value]="state.id"
+                      (change)="pilihNegeri(state.id, $event.target.checked, state.nama_negeri)"
+                      [checked]="checkNegeriExist(state.id)"
+                    />
+                    <input *ngIf="!idBencana"
+                      class="checkbox_animated"
+                      id="negeri-{{ i }}"
+                      type="checkbox"
+                      [value]="state.id"
+                      (change)="pilihNegeri(state.id, $event.target.checked, state.nama_negeri)"
+                      [checked]="checkNegeri"
+                    />
+                    <label for="negeri-{{ i }}">{{state.nama_negeri}}</label>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="f.submitted && this.negeri.length == 0" class="invalid-feedback d-block">
+              Negeri Wajib Dipilih
+            </div>
+            <hr/>
+
+						<button *ngIf="!idBencana" class="btn btn-primary pull-right" type="submit">Hantar</button>
+						<button *ngIf="idBencana" class="btn btn-primary pull-right" type="submit">Simpan</button>
+						<button
+							class="btn btn-light pull-right mr-2"
+							[routerLink]="['/app/bencana/senarai']"
+							type="button"
+						>
+							Kembali
+						</button>
+          </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

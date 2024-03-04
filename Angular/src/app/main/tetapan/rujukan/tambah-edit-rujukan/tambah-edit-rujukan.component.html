@@ -1,0 +1,102 @@
+<div class="modal-header">
+	<h5 class="modal-title" *ngIf="name === 'add'">Tambah Rujukan</h5>
+	<h5 class="modal-title" *ngIf="name === 'edit'">Kemaskini Rujukan</h5>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && sizeImage != null && saveImage()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Nama Rujukan*</label>
+					<input
+						class="form-control"
+						type="text"
+						placeholder="Nama Rujukan"
+						[(ngModel)]="rujukan.nama_rujukan"
+						#nama_rujukan="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && nama_rujukan.invalid }"
+						name="dana.nama_sumber_dana"
+						required
+					/>
+					<div *ngIf="f.submitted && nama_rujukan.invalid" class="invalid-feedback">
+						<div *ngIf="nama_rujukan.errors.required">Nama Rujukan Wajib Diisi</div>
+					</div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" *ngIf="name === 'add'">
+        <div class="form-group">
+          <label>Dokumen Rujukan*</label>
+          <input
+            (change)="onSelect($event)"
+            class="form-control"
+            type="file"
+            [ngClass]="{ 'is-invalid': f.submitted && sizeImage == null }"
+            required
+          />
+          <div *ngIf="f.submitted && sizeImage == null" class="invalid-feedback">
+            Dokumen Rujukan Wajib Dimuatnaik
+          </div>
+        </div>
+      </div>
+
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Status*</label>
+					<select
+						class="form-control digits"
+						name="status_negeri"
+						[(ngModel)]="rujukan.status_rujukan"
+						#status="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && status.invalid }"
+						required
+					>
+						<option selected disabled [value]="undefined">Sila Pilih</option>
+						<option [value]="1">Aktif</option>
+						<option [value]="2">Tidak Aktif</option>
+					</select>
+					<div *ngIf="f.submitted && status.invalid" class="invalid-feedback">
+						<div *ngIf="status.errors.required">Status Wajib Dipilih</div>
+					</div>
+				</div>
+			</div>
+
+      <div class="col-lg-6" *ngIf="name === 'edit'">
+        <div class="form-group">
+          <label>Dokumen Rujukan</label>
+          <div class="col-lg-12" *ngIf="!rujukan.nama_dokumen">
+            <div class="card" style="text-align: center; background-color: #f9f9f9;">
+              <div class="card-body p-4">
+                <i class="icofont icofont-warning mr-2"></i>
+                <a>Tiada rekod dijumpai!</a>
+              </div>
+            </div>
+          </div>
+          <div class="file-content" *ngIf="rujukan.nama_dokumen">
+            <div class="file-manager">
+              <ul class="files">
+                <li class="file-box" style="width: 100%;">
+                  <a (click)="getFile(rujukan.lokasi_dokumen)" style="cursor: pointer;">
+                    <div class="file-top">
+                      <i class="fa fa-file-pdf-o text-danger"  *ngIf="rujukan.sambungan_fail == 'pdf'"></i>
+                      <i class="fa fa-file-image-o txt-info"  *ngIf="rujukan.sambungan_fail == 'jpg' || rujukan.sambungan_fail == 'jpeg' || rujukan.sambungan_fail == 'png'"></i>
+                      <i class="fa fa-file-word-o text-primary"  *ngIf="rujukan.sambungan_fail == 'doc' || rujukan.sambungan_fail == 'docx' || rujukan.sambungan_fail == 'txt'"></i>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close(false)">Tutup</button>
+    <button type="submit" class="btn btn-primary">Simpan</button>
+  </div>
+</form>

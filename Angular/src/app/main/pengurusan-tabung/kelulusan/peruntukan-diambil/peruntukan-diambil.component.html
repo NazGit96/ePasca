@@ -1,0 +1,69 @@
+<div class="modal-header">
+	<h5 class="modal-title">Peruntukan Diambil</h5>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+  <div class="modal-body">
+    <div class="row">
+      <div class="ribbon ribbon-danger">Perhatian</div>
+    </div><br>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="form-group">
+                <label>Sila Semak Jumlah Yang Diambil Sebelum Menghantar Permohonan Untuk Pindahan Peruntukan </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Jumlah Siling Peruntukan Semasa: </label>
+                <a style="font-weight: bold;"> RM {{baki_jumlah_siling | number: '1.2-2'}}</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Jumlah Peruntukan Diambil (RM)</label>
+                <input
+                    class="form-control"
+                    id="jumlah"
+                    type="text"
+                    name="jumlahPeruntukan"
+                    placeholder="Jumlah Peruntukan"
+                    [(ngModel)]="peruntukan.jumlah"
+                    (keyup)="kiraJumlah()"
+                    #jumlah="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && jumlah.invalid }"
+                    required
+                    currencyMask
+                    [options]="{ prefix: 'RM ', align: 'left' }"
+                    autocomplete="off"
+                />
+                <div *ngIf="f.submitted && jumlah.invalid" class="invalid-feedback">
+                    <div *ngIf="jumlah.errors.required">Jumlah Peruntukan Diambil Wajib Diisi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label>Jumlah Siling Peruntukan Baru: </label>
+                <a style="font-weight: bold;"> RM {{jumlahBaru | number: '1.2-2'}}</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="activeModal.close(false)">Tutup</button>
+        <button type="submit" class="btn btn-primary" >Simpan</button>
+    </div>
+</form>

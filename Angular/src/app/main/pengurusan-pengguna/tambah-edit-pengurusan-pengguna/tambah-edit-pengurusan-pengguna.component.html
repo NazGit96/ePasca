@@ -1,0 +1,605 @@
+<app-breadcrumb *ngIf="idPengguna" [title]="'Kemaskini Maklumat Pengguna'" [items]="['Pengurusan Pengguna']"
+	[active_item]="['Kemaskini']"
+></app-breadcrumb>
+<app-breadcrumb *ngIf="!idPengguna" [title]="'Tambah Pengguna Baru'" [items]="['Pengurusan Pengguna']"
+	[active_item]="['Tambah']"
+></app-breadcrumb>
+
+<div class="card">
+  <div class="card-body">
+    <ul ngbNav #nav="ngbNav" animation="true" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1" [destroyOnHide]="true">
+        <a ngbNavLink>Pengguna</a>
+        <ng-template ngbNavContent>
+          <form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" autocomplete="off" novalidate>
+            <h6>Maklumat Pengguna</h6>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>Nama*</label>
+                  <input
+                    class="form-control"
+                    id="namaPemohon"
+                    type="text"
+                    name="nama"
+                    [(ngModel)]="edit.pengguna.nama"
+                    placeholder="Nama Pengguna"
+                    #namaPemohon="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && namaPemohon.invalid }"
+                    required
+                  />
+                  <div *ngIf="f.submitted && namaPemohon.invalid" class="invalid-feedback">
+                    <div *ngIf="namaPemohon.errors.required">Nama Wajib Diisi</div>
+                  </div>
+                </div>
+							</div>
+
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>No. Kad Pengenalan*</label>
+                  <input
+                    class="form-control"
+                    id="noKadPengenalan"
+                    type="text"
+                    name="no_kp"
+                    [(ngModel)]="edit.pengguna.no_kp"
+                    placeholder="No. Kad Pengenalan"
+                    #noKp="ngModel"
+                    [class.is-invalid]="((noKp.touched || noKp.dirty) && noKp.errors?.stateCodeInvalid && noKp.errors?.valueInvalid) || f.submitted && noKp.invalid"
+                    maxlength="12"
+                    onlyNumbers
+                    kpValidator
+                    required
+                  />
+                  <div *ngIf="f.submitted && noKp.invalid" class="invalid-feedback">
+                    <div *ngIf="noKp.errors.required">No. Kad Pengenalan Wajib Diisi</div>
+                  </div>
+                  <div class="mt-1" *ngIf="(noKp.touched || noKp.dirty) && noKp.errors?.valueInvalid" style="color: #dc3545; font-size: 80%; size: 80%;">
+                    No. Kad Pengenalan Kurang Daripada 12
+                  </div>
+                  <div class="mt-1" *ngIf="(noKp.touched || noKp.dirty) && noKp.errors?.stateCodeInvalid" style="color: #dc3545; font-size: 80%; size: 80%;">
+                    Kod Negeri Tidak Sah
+                  </div>
+                </div>
+							</div>
+						</div>
+
+            <div class="row">
+              <div class="col-lg-6" *ngIf="inputEmail == true" [@fadeVerticalAnimation]>
+								<div class="form-group">
+                  <label>
+                    Emel*
+                    <i
+                      class="fa fa-info-circle ml-2"
+                      placement="right"
+                      ngbTooltip="Emel ini akan digunakan untuk Log Masuk di e-Pasca Bencana"
+                      style="cursor: pointer; color: var(--theme-deafult);"
+                    ></i>
+                  </label>
+                  <input
+                    class="form-control"
+                    id="emelPemohon"
+                    type="text"
+                    name="emel"
+                    placeholder="Emel"
+                    [(ngModel)]="edit.pengguna.emel"
+                    #emelPemohon="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && emelPemohon.invalid }"
+                    [pattern]="emailPattern"
+                    required
+                  />
+                  <div *ngIf="f.submitted && emelPemohon.invalid" class="invalid-feedback">
+                    <div *ngIf="emelPemohon.errors.required">Emel Wajib Diisi</div>
+                    <div *ngIf="emelPemohon.errors.pattern">Format Emel Tidak Sesuai</div>
+                  </div>
+                </div>
+							</div>
+
+              <div class="col-lg-6" *ngIf="inputEmail == false" [@fadeVerticalAnimation]>
+								<div class="form-group">
+                  <label>Emel*</label>
+                  <input
+                    class="form-control"
+                    name="emel"
+                    placeholder="Emel"
+                    [(ngModel)]="edit.pengguna.emel"
+                    disabled
+                  />
+                </div>
+							</div>
+
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>Telefon Bimbit*</label>
+                  <input
+                    class="form-control"
+                    id="telefonBimbit"
+                    type="text"
+                    name="telefon_bimbit"
+                    [(ngModel)]="edit.pengguna.telefon_bimbit"
+                    placeholder="Telefon Bimbit"
+                    #telefonBimbit="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && telefonBimbit.invalid }"
+                    minlength="9"
+                    maxlength="15"
+                    onlyNumbers
+                    required
+                  />
+                  <div *ngIf="f.submitted && telefonBimbit.invalid" class="invalid-feedback">
+                    <div *ngIf="telefonBimbit.errors.required">Telefon Bimbit Wajib Diisi</div>
+                  </div>
+                </div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>Jawatan*</label>
+                  <input
+                    class="form-control"
+                    id="jawatanPemohon"
+                    type="text"
+                    name="jawatan"
+                    [(ngModel)]="edit.pengguna.jawatan"
+                    placeholder="Jawatan"
+                    #jawatanPemohon="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && jawatanPemohon.invalid }"
+                    required
+                  />
+                  <div *ngIf="f.submitted && jawatanPemohon.invalid" class="invalid-feedback">
+                    <div *ngIf="jawatanPemohon.errors.required">Jawatan Wajib Diisi</div>
+                  </div>
+                </div>
+							</div>
+
+              <div class="col-lg-6" *ngIf="!idPengguna" [@fadeVerticalAnimation]>
+								<div class="form-group">
+                  <label>Peranan*</label>
+                  <ng-select
+                    [items]="tambahPeranan"
+                    bindLabel="nama_peranan"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="id_peranan"
+                    [(ngModel)]="edit.pengguna.id_peranan"
+                    #peranan="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && peranan.invalid }"
+                    required
+                  ></ng-select>
+                  <div *ngIf="f.submitted && peranan.invalid" class="invalid-feedback">
+                    <div *ngIf="peranan.errors.required">Peranan Wajib Dipilih</div>
+                  </div>
+                </div>
+							</div>
+
+              <div class="col-lg-6" *ngIf="idPengguna" [@fadeVerticalAnimation]>
+								<div class="form-group">
+                  <label>Peranan*</label>
+                  <ng-select
+                    [items]="viewPeranan"
+                    bindLabel="nama_peranan"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="id_peranan"
+                    [(ngModel)]="edit.pengguna.id_peranan"
+                    disabled
+                  ></ng-select>
+                </div>
+							</div>
+						</div>
+						<hr />
+
+						<h6>Maklumat Agensi</h6>
+            <div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>Nama Agensi*</label>
+                  <div *ngIf="agensiNadma == true" [@fadeVerticalAnimation]>
+                    <input
+                      class="form-control"
+                      name="agensi"
+                      placeholder="Nama Agensi"
+                      value="AGENSI PENGURUSAN BENCANA NEGARA"
+                      disabled
+                    />
+                  </div>
+                  <div *ngIf="agensiNadma == false" [@fadeVerticalAnimation]>
+                    <ng-select
+                      [items]="agency"
+                      bindLabel="nama_agensi"
+                      placeholder="Sila Pilih"
+                      class="js-example-placeholder-multiple"
+                      name="namaAgensi"
+                      (change)="setAgensi()"
+                      [(ngModel)]="agensi"
+                      #namaAgensi="ngModel"
+                      [ngClass]="{ 'is-invalid': f.submitted && namaAgensi.invalid }"
+                      required
+                    ></ng-select>
+                    <div *ngIf="f.submitted && namaAgensi.invalid" class="invalid-feedback">
+                      <div *ngIf="namaAgensi.errors.required">Nama Agensi Wajib Dipilih</div>
+                    </div>
+                  </div>
+                </div>
+							</div>
+
+              <div class="col-lg-6">
+								<div class="form-group">
+                  <label>Nama Kementerian*</label>
+                  <div *ngIf="agensiNadma == true" [@fadeVerticalAnimation]>
+                    <input
+                      class="form-control"
+                      name="kementerian"
+                      placeholder="Nama Kementerian"
+                      value="JABATAN PERDANA MENTERI"
+                      disabled
+                    />
+                  </div>
+                  <div *ngIf="agensiNadma == false" [@fadeVerticalAnimation]>
+                    <ng-select
+                      [items]="ministries"
+                      bindLabel="nama_kementerian"
+                      bindValue="id"
+                      placeholder="Sila Pilih"
+                      class="js-example-placeholder-multiple"
+                      name="id_kementerian"
+                      [(ngModel)]="edit.pengguna.id_kementerian"
+                      disabled
+                    ></ng-select>
+                  </div>
+                </div>
+							</div>
+						</div>
+
+						<div class="row">
+              <div class="col-lg-6">
+								<div class="form-group">
+                  <label>No. Telefon Pejabat*</label>
+                  <input
+                    class="form-control"
+                    id="noTelefonPejabat"
+                    type="text"
+                    name="telefon_pejabat"
+                    [(ngModel)]="edit.pengguna.telefon_pejabat"
+                    placeholder="No. Telefon Pejabat"
+                    #noTelefonPejabat="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && noTelefonPejabat.invalid }"
+                    minlength="9"
+                    maxlength="12"
+                    onlyNumbers
+                    required
+                  />
+                  <div *ngIf="f.submitted && noTelefonPejabat.invalid" class="invalid-feedback">
+                    <div *ngIf="noTelefonPejabat.errors.required">No. Telefon Pejabat Wajib Diisi</div>
+                    <div *ngIf="noTelefonPejabat.errors.minlength">No. Telefon Pejabat Mesti Melebihi 9 Digit</div>
+                  </div>
+                </div>
+							</div>
+
+							<div class="col-lg-6">
+								<div class="form-group">
+                  <label>Fax</label>
+                  <input
+                    class="form-control"
+                    id="noFax"
+                    type="text"
+                    name="fax"
+                    [(ngModel)]="edit.pengguna.fax"
+                    placeholder="Fax"
+                    minlength="8"
+                    maxlength="15"
+                    onlyNumbers
+                  />
+                </div>
+							</div>
+						</div>
+
+            <div class="row" *ngIf="agensiNadma == false" [@fadeVerticalAnimation]>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Alamat 1*</label>
+                  <input
+                    class="form-control"
+                    id="alamat1Agensi"
+                    type="text"
+                    name="alamat1"
+                    [(ngModel)]="edit.pengguna.alamat_1"
+                    placeholder="Alamat 1"
+                    #alamat1Agensi="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && alamat1Agensi.invalid }"
+                    required
+                  />
+                  <div *ngIf="f.submitted && alamat1Agensi.invalid" class="invalid-feedback">
+                    <div *ngIf="alamat1Agensi.errors.required">Alamat 1 Agensi Wajib Diisi</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Alamat 2</label>
+                  <input
+                    class="form-control"
+                    id="alamat2Agensi"
+                    type="text"
+                    name="alamat2"
+                    [(ngModel)]="edit.pengguna.alamat_2"
+                    placeholder="Alamat 2"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="agensiNadma == false" [@fadeVerticalAnimation]>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Poskod*</label>
+                  <input
+                    class="form-control"
+                    id="poskodAgensi"
+                    type="text"
+                    name="poskod"
+                    [(ngModel)]="edit.pengguna.poskod"
+                    placeholder="Poskod"
+                    #poskodAgensi="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && poskodAgensi.invalid }"
+                    minlength="5"
+                    maxlength="5"
+                    onlyNumbers
+                    required
+                  />
+                  <div *ngIf="f.submitted && poskodAgensi.invalid" class="invalid-feedback">
+                    <div *ngIf="poskodAgensi.errors.required">Poskod Wajib Diisi</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Daerah*</label>
+                  <ng-select
+                    [items]="districts"
+                    bindLabel="nama_daerah"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="daerahAgensi"
+                    (change)="setDaerah()"
+                    [(ngModel)]="daerah"
+                    #namaDaerah="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && namaDaerah.invalid }"
+                    required
+                  ></ng-select>
+                  <div *ngIf="f.submitted && namaDaerah.invalid" class="invalid-feedback">
+                    <div *ngIf="namaDaerah.errors.required">Daerah Wajib Diisi</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6" *ngIf="agensiNadma == false" [@fadeVerticalAnimation]>
+                <div class="form-group">
+                  <label>Negeri*</label>
+                  <ng-select
+                    [items]="states"
+                    bindLabel="nama_negeri"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="id_negeri"
+                    [(ngModel)]="edit.pengguna.id_negeri"
+                    disabled
+                  ></ng-select>
+                </div>
+              </div>
+
+              <div class="col-lg-6" *ngIf="statusId == 1" [@fadeVerticalAnimation]>
+                <div class="form-group">
+                  <label>Status Pengguna</label>
+                  <ng-select
+                    [items]="statusPengesahan"
+                    bindLabel="nama"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="status_pengesahan"
+                    [(ngModel)]="edit.pengguna.status_pengguna"
+                  ></ng-select>
+                </div>
+              </div>
+
+              <div class="col-lg-6" *ngIf="statusId == 2 || statusId == 3" [@fadeVerticalAnimation]>
+                <div class="form-group">
+                  <label>Status Pengguna</label>
+                  <ng-select
+                    [items]="statusBerdaftar"
+                    bindLabel="nama"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="status_berdaftar"
+                    [(ngModel)]="edit.pengguna.status_pengguna"
+                  ></ng-select>
+                </div>
+              </div>
+
+              <div class="col-lg-6" *ngIf="statusId == 4" [@fadeVerticalAnimation]>
+                <div class="form-group">
+                  <label>Status Pengguna</label>
+                  <ng-select
+                    [items]="statusDitolak"
+                    bindLabel="nama"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="status_tidak_aktif"
+                    [(ngModel)]="edit.pengguna.status_pengguna"
+                  ></ng-select>
+                </div>
+              </div>
+
+              <div class="col-lg-6" *ngIf="edit.pengguna.status_pengguna == 3 || edit.pengguna.status_pengguna == 4" [@fadeVerticalAnimation]>
+                <div class="form-group">
+                  <label *ngIf="edit.pengguna.status_pengguna == 3">Sebab Tidak Aktif*</label>
+                  <label *ngIf="edit.pengguna.status_pengguna == 4">Sebab Penolakan*</label>
+                  <textarea
+                    class="form-control"
+                    placeholder=""
+                    name="note"
+                    [(ngModel)]="edit.pengguna.catatan"
+                    #catatan="ngModel"
+                    [ngClass]="{ 'is-invalid': (f.submitted || catatan.touched) && catatan.invalid }"
+                    required
+                  >
+                  </textarea>
+                  <div *ngIf="(f.submitted || catatan.touched) && catatan.invalid" class="invalid-feedback">
+                    <div *ngIf="catatan.errors.required && edit.pengguna.status_pengguna == 3">Sebab Tidak Aktif Wajib Diisi</div>
+                    <div *ngIf="catatan.errors.required && edit.pengguna.status_pengguna == 4">Sebab Penolakan Wajib Diisi</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row no-gutters justify-content-end mt-3">
+              <button
+                *ngIf="edit.pengguna.status_pengguna == 1"
+                type="button" class="btn btn-light mr-2" [routerLink]="['/app/pengguna/permohonan']"
+              >
+                Kembali
+              </button>
+              <button
+                *ngIf="edit.pengguna.status_pengguna != 1"
+                type="button" class="btn btn-light mr-2" [routerLink]="['/app/pengguna/senarai']"
+              >
+                Kembali
+              </button>
+              <button class="btn btn-light mr-2" (click)="reset()" type="button">
+                Reset
+              </button>
+              <button class="btn btn-primary pull-right" type="submit">
+                Simpan
+              </button>
+            </div>
+          </form>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2" [destroyOnHide]="true" [hidden]="viewTab == false">
+        <a ngbNavLink>Emel & Kata Laluan</a>
+        <ng-template ngbNavContent>
+          <form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && saveEmelPassword()" novalidate autocomplete="off">
+            <h6>Kemaskini Emel & Kata Laluan</h6>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Emel Baru</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="Emel Baru"
+                    name="new_emel"
+                    [(ngModel)]="new_email"
+                    #emailBaru="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && emailBaru.invalid }"
+                    [pattern]="emailPattern"
+                  />
+                  <div *ngIf="f.submitted && emailBaru.invalid" class="invalid-feedback">
+                    <div *ngIf="emailBaru.errors.pattern">Format Emel Tidak Sesuai</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>
+                    Kata Laluan Baru
+                    <i
+                      class="fa fa-info-circle ml-2"
+                      placement="right"
+                      ngbTooltip="Minimum 8 Aksara Terdiri Daripada 1 Huruf Besar, 1 Huruf Kecil, 1 Nombor dan 1 Aksara Khas"
+                      style="cursor: pointer; color: var(--theme-deafult);"
+                    ></i>
+                  </label>
+                  <input
+                    placeholder="Kata Laluan Baru"
+                    class="form-control"
+                    [type]="showNew ? 'text' : 'password'"
+                    name="kata_laluan_baharu"
+                    [(ngModel)]="new_password"
+                    #kataLaluanBaru="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && kataLaluanBaru.invalid }"
+                    [pattern]="passwordPattern"
+                    minlength="8"
+                    maxlength="12"
+                  />
+                  <div class="show-hide-3" (click)="showNewPassword()" *ngIf="!showNew">
+                    <div style="color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-outline fa-lg"></i></div>
+                  </div>
+                  <div class="show-hide-3" (click)="showNewPassword()" *ngIf="showNew">
+                    <div style="color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-off-outline fa-lg"></i></div>
+                  </div>
+                  <div *ngIf="f.submitted && kataLaluanBaru.invalid" class="invalid-feedback">
+                    <div *ngIf="kataLaluanBaru.errors.pattern">Format Kata Laluan Tidak Sesuai</div>
+                    <div *ngIf="kataLaluanBaru.errors.minlength">Kata Laluan Mestilah Melebihi 8 Aksara</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Ulang Kata Laluan</label>
+                  <input
+                    placeholder="Ulang Kata Laluan"
+                    class="form-control"
+                    [type]="showRepeatNew ? 'text' : 'password'"
+                    name="ulang_kata_laluan"
+                    [(ngModel)]="repeat_new_password"
+                    maxlength="12"
+                  />
+                  <div class="show-hide-3" (click)="showRepeatNewPassword()" *ngIf="!showRepeatNew">
+                    <div style="color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-outline fa-lg"></i></div>
+                  </div>
+                  <div class="show-hide-3" (click)="showRepeatNewPassword()" *ngIf="showRepeatNew">
+                    <div style="color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-off-outline fa-lg"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3 no-gutters justify-content-end">
+              <button class="btn btn-light mr-2" type="button" [routerLink]="['/app/pengguna/senarai']">
+                Kembali
+              </button>
+              <button class="btn btn-primary" type="submit">Simpan</button>
+            </div>
+          </form>
+        </ng-template>
+      </li>
+
+      <li [ngbNavItem]="3" [destroyOnHide]="false" [hidden]="!edit.pengguna.id">
+        <a ngbNavLink>Capaian</a>
+        <ng-template ngbNavContent>
+          <form class="form theme-form" focusInvalidInput (ngSubmit)="save()" novalidate autocomplete="off">
+            <h6>Kemaskini Capaian</h6>
+            <div class="row">
+              <div class="col-lg-12">
+                <app-peranan-tree #permissionTree [singleSelect]="singleSelect"></app-peranan-tree>
+              </div>
+            </div>
+            <div class="row mt-3 no-gutters justify-content-end">
+              <button class="btn btn-light mr-2" type="button" [routerLink]="['/app/pengguna/senarai']">
+                Kembali
+              </button>
+              <button class="btn btn-primary" type="submit">Simpan</button>
+            </div>
+          </form>
+        </ng-template>
+      </li>
+    </ul>
+    <div class="row no-gutters mt-2" [ngbNavOutlet]="nav"></div>
+  </div>
+</div>

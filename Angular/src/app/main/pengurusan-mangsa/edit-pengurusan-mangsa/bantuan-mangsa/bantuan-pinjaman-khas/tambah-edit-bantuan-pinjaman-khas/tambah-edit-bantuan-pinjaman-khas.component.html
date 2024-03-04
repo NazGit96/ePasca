@@ -1,0 +1,205 @@
+<div class="modal-header">
+	<h4 class="modal-title" *ngIf="name === 'add'">Tambah Bantuan Pinjaman Khas</h4>
+  <h4 class="modal-title" *ngIf="name === 'edit'">Kemaskini Bantuan Pinjaman Khas</h4>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+	<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+    <div class="modal-body">
+		<div class="row">
+			<div class="col-lg-6">
+        <div class="form-group">
+          <label>Bencana*</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="Bencana"
+              name="bencana"
+              [(ngModel)]="pinjamanKhas.nama_bencana"
+              #namaBencana="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && namaBencana.invalid }"
+              required
+              readonly
+            />
+            <div class="input-group-append" *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')">
+              <button class="btn btn-primary" (click)="pilihBencana()" type="button">
+                <i class="fa fa-search text-white"></i>
+              </button>
+            </div>
+            <div *ngIf="f.submitted && namaBencana.invalid" class="invalid-feedback">
+              <div *ngIf="namaBencana.errors.required">Bencana Wajib Dipilih</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+        <label>Tarikh Bencana</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            name="dp3"
+            [(ngModel)]="modelBencana"
+            ngbDatepicker
+            #d3="ngbDatepicker"
+            style="border-color: #efefef;"
+            readonly
+          >
+        </div>
+      </div>
+		</div>
+
+		<div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Agensi Pemberi Bantuan*</label>
+          <ng-select
+            [items]="agensi"
+            bindLabel="nama_agensi"
+            bindValue="id"
+            placeholder="Sila Pilih"
+            class="js-example-placeholder-multiple"
+            name="pinjamanKhas.id_agensi_bantuan"
+            [(ngModel)]="pinjamanKhas.id_agensi_bantuan"
+            #namaAgensi="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && namaAgensi.invalid }"
+            required
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          ></ng-select>
+          <div *ngIf="f.submitted && namaAgensi.invalid" class="invalid-feedback">
+            <div *ngIf="namaAgensi.errors.required">Agensi Pemberi Bantuan Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+        <label>Tarikh Mula Pinjaman*</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            name="dp"
+            [(ngModel)]="model"
+            ngbDatepicker
+            [footerTemplate]="footerTemplate"
+            #d="ngbDatepicker"
+            style="border-color: #efefef;"
+            #tarikhPinjam="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && tarikhPinjam.invalid }"
+            required
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          >
+          <div class="input-group-append" *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')">
+            <button class="btn btn-light" (click)="d.toggle()" type="button"><i
+              class="fa fa-calendar"></i></button>
+          </div>
+					<div *ngIf="f.submitted && tarikhPinjam.invalid" class="invalid-feedback">
+            <div *ngIf="tarikhPinjam.errors.required">Tarikh Mula Pinjaman Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+      <ng-template #footerTemplate>
+        <hr class="my-0">
+        <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Hari Ini</button>
+        <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Tutup</button>
+      </ng-template>
+		</div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Tempoh Pinjaman*</label>
+          <input
+            class="form-control"
+            name="pinjamanKhas.tempoh_pinjaman"
+            [(ngModel)]="pinjamanKhas.tempoh_pinjaman"
+            placeholder="Tempoh Pinjaman"
+            #tempohPinjaman="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && tempohPinjaman.invalid }"
+            required
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          />
+          <div *ngIf="f.submitted && tempohPinjaman.invalid" class="invalid-feedback">
+            <div *ngIf="tempohPinjaman.errors.required">Tempoh Pinjaman Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Sektor*</label>
+          <ng-select
+            [items]="sektor"
+            bindLabel="nama_sektor"
+            bindValue="id"
+            placeholder="Sila Pilih"
+            class="js-example-placeholder-multiple"
+            name="pinjamanKhas.id_sektor"
+            [(ngModel)]="pinjamanKhas.id_sektor"
+            #namaSektor="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && namaSektor.invalid }"
+            required
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          ></ng-select>
+          <div *ngIf="f.submitted && namaSektor.invalid" class="invalid-feedback">
+            <div *ngIf="namaSektor.errors.required">Sektor Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+		</div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Jumlah Pinjaman (RM)*</label>
+          <input
+            class="form-control"
+            name="pinjamanKhas.jumlah_pinjaman"
+            [(ngModel)]="pinjamanKhas.jumlah_pinjaman"
+            placeholder="Jumlah Pinjaman"
+            #jumlahPinjaman="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && jumlahPinjaman.invalid }"
+            required
+            currencyMask
+            [options]="{ prefix: 'RM ', align: 'left' }"
+            autocomplete="off"
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          />
+          <div *ngIf="f.submitted && jumlahPinjaman.invalid" class="invalid-feedback">
+            <div *ngIf="jumlahPinjaman.errors.required">Jumlah Pinjaman Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6" *ngIf="name === 'edit'">
+        <div class="form-group">
+          <label>Status*</label>
+          <ng-select
+            [items]="status"
+            bindLabel="nama_status"
+            bindValue="id"
+            placeholder="Sila Pilih"
+            class="js-example-placeholder-multiple"
+            name="id_status"
+            [(ngModel)]="pinjamanKhas.status_mangsa_pinjaman"
+            #namaStatus="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && namaStatus.invalid }"
+            required
+            [readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')"
+          ></ng-select>
+          <div *ngIf="f.submitted && namaStatus.invalid" class="invalid-feedback">
+            <div *ngIf="namaStatus.errors.required">Status Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+		</div>
+
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Tutup</button>
+	<button *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanPinjaman.Tambah')" type="submit" class="btn btn-primary">Simpan</button>
+</div>
+</form>

@@ -1,0 +1,196 @@
+<div class="modal-header">
+	<h4 class="modal-title" *ngIf="name === 'add'">Tambah Bantuan Antarabangsa</h4>
+  <h4 class="modal-title" *ngIf="name === 'edit'">Kemaskini Bantuan Antarabangsa</h4>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+  <div class="modal-body">
+		<div class="row">
+			<div class="col-lg-6">
+        <div class="form-group">
+          <label>Bencana*</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="Bencana"
+              name="bencana"
+              [(ngModel)]="antarabangsa.nama_bencana"
+              #namaBencana="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && namaBencana.invalid }"
+              required
+              readonly
+            />
+            <div class="input-group-append" *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')">
+              <button class="btn btn-primary" (click)="pilihBencana()" type="button">
+                <i class="fa fa-search text-white"></i>
+              </button>
+            </div>
+            <div *ngIf="f.submitted && namaBencana.invalid" class="invalid-feedback">
+              <div *ngIf="namaBencana.errors.required">Bencana Wajib Dipilih</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+        <label>Tarikh Bencana</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            name="dp3"
+            [(ngModel)]="modelBencana"
+            ngbDatepicker
+            #d3="ngbDatepicker"
+            style="border-color: #efefef;"
+            readonly
+          >
+        </div>
+      </div>
+		</div>
+
+		<div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Negara Penyumbang*</label>
+          <input
+            class="form-control"
+            name="negara"
+            [(ngModel)]="antarabangsa.negara"
+            placeholder="Negara Penyumbang"
+            #negaraPenyumbang="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && negaraPenyumbang.invalid }"
+            required
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          />
+          <div *ngIf="f.submitted && negaraPenyumbang.invalid" class="invalid-feedback">
+            <div *ngIf="negaraPenyumbang.errors.required">Negara Penyumbang Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+
+			<div class="col-lg-6">
+        <div class="form-group">
+          <label>Nama Bantuan*</label>
+          <input
+            class="form-control"
+            name="nama_bantuan"
+            [(ngModel)]="antarabangsa.nama_bantuan"
+            placeholder="Nama Bantuan"
+            #bantuanAntarabangsa="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && bantuanAntarabangsa.invalid }"
+            required
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          />
+          <div *ngIf="f.submitted && bantuanAntarabangsa.invalid" class="invalid-feedback">
+            <div *ngIf="bantuanAntarabangsa.errors.required">Nama Bantuan Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+		</div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Kos Bantuan (RM)*</label>
+          <input
+            class="form-control"
+            name="kos_bantuan"
+            [(ngModel)]="antarabangsa.kos_bantuan"
+            placeholder="Kos Bantuan"
+            #kosBantuan="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && kosBantuan.invalid }"
+            required
+            currencyMask
+            [options]="{ prefix: 'RM ', align: 'left' }"
+            autocomplete="off"
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          />
+          <div *ngIf="f.submitted && kosBantuan.invalid" class="invalid-feedback">
+            <div *ngIf="kosBantuan.errors.required">Kos Bantuan Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+        <label>Tarikh Bantuan*</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            name="dp"
+            [(ngModel)]="model"
+            ngbDatepicker
+            [footerTemplate]="footerTemplate"
+            #d="ngbDatepicker"
+            style="border-color: #efefef;"
+						#tarikhBantuan="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && tarikhBantuan.invalid }"
+						required
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          >
+          <div class="input-group-append" *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')">
+            <button class="btn btn-light" (click)="d.toggle()" type="button"><i
+              class="fa fa-calendar"></i></button>
+          </div>
+					<div *ngIf="f.submitted && tarikhBantuan.invalid" class="invalid-feedback">
+						<div *ngIf="tarikhBantuan.errors.required">Tarikh Bantuan Wajib Dipilih</div>
+					</div>
+        </div>
+      </div>
+      <ng-template #footerTemplate>
+        <hr class="my-0">
+        <button class="btn btn-primary btn-sm m-2 float-left" (click)="model = today; d.close()">Hari Ini</button>
+        <button class="btn btn-secondary btn-sm m-2 float-right" (click)="d.close()">Tutup</button>
+      </ng-template>
+		</div>
+
+		<div class="row" *ngIf="name === 'edit'">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Status*</label>
+          <ng-select
+            [items]="status"
+            bindLabel="nama_status"
+            bindValue="id"
+            placeholder="Sila Pilih"
+            class="js-example-placeholder-multiple"
+            name="id_status"
+            [(ngModel)]="antarabangsa.status_mangsa_antarabangsa"
+            #namaStatus="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && namaStatus.invalid }"
+            required
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          ></ng-select>
+          <div *ngIf="f.submitted && namaStatus.invalid" class="invalid-feedback">
+            <div *ngIf="namaStatus.errors.required">Status Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+		</div>
+
+    <div class="row">
+			<div class="col">
+				<div class="form-group">
+					<label>Catatan</label>
+					<textarea
+            class="form-control"
+            name="catatan"
+            [(ngModel)]="antarabangsa.catatan"
+            rows="3"
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || !_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')"
+          >
+          </textarea>
+				</div>
+			</div>
+		</div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Tutup</button>
+    <button *ngIf="_appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Edit') || _appSession.isGranted('Halaman.Mangsa.BantuanAntarabangsa.Tambah')" type="submit" class="btn btn-primary">Simpan</button>
+  </div>
+</form>

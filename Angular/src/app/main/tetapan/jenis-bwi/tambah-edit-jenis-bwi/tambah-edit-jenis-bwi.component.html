@@ -1,0 +1,59 @@
+<div class="modal-header">
+	<h5 class="modal-title" *ngIf="name === 'add'">Tambah Kategori Bantuan Wang Ihsan</h5>
+	<h5 class="modal-title" *ngIf="name === 'edit'">Kemaskini Kategori Bantuan Wang Ihsan</h5>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()">
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-6">
+				<div class="form-group">
+					<label>Nama Kategori BWI*</label>
+					<input
+						class="form-control"
+						id="namaJenisBwi"
+						type="text"
+						name="nama_jenis_bwi"
+						placeholder="Nama Kategori BWI"
+						[(ngModel)]="jenis_bwi.nama_jenis_bwi"
+						#jenisBwi="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && jenisBwi.invalid }"
+						required
+					/>
+					<div *ngIf="f.submitted && jenisBwi.invalid" class="invalid-feedback">
+						<div *ngIf="jenisBwi.errors.required">Nama Kategori BWI Wajib Diisi</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Status*</label>
+					<select
+            id="status"
+						class="form-control digits"
+						name="status_jenis"
+						[(ngModel)]="jenis_bwi.status_jenis_bwi"
+						#status="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && status.invalid }"
+						required
+					>
+						<option selected disabled [value]="undefined">Sila Pilih</option>
+						<option [value]="1">Aktif</option>
+						<option [value]="2">Tidak Aktif</option>
+					</select>
+					<div *ngIf="f.submitted && status.invalid" class="invalid-feedback">
+						<div *ngIf="status.errors.required">Status Wajib Dipilih</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-light" (click)="activeModal.close(false)">Tutup</button>
+		<button type="submit" class="btn btn-primary">Simpan</button>
+	</div>
+</form>

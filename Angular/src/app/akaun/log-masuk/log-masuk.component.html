@@ -1,0 +1,62 @@
+<div class="login-main">
+	<form class="theme-form" name="form" #f="ngForm" (ngSubmit)="f.form.valid && userlogin()" novalidate>
+    <div class="d-flex align-items-center justify-content-between">
+      <h4>Log Masuk</h4>
+      <button
+          class="btn btn-light rounded-circle btn-sm"
+          type="button"
+          ngbTooltip="Sekiranya terdapat sebarang persoalan, sila hubungi di talian 03-88704800 atau emel ke alamat spks@nadma.gov.my">
+          <i class="icon-help"></i>
+      </button>
+    </div>
+		<div class="form-group">
+			<label>Emel Pengguna</label>
+			<input
+				class="form-control"
+				type="email"
+				name="email"
+				[(ngModel)]="login.emel"
+				#email="ngModel"
+				[ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+				required
+        email
+			/>
+			<div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+				<div *ngIf="email.errors.required">Emel Wajib Diisi</div>
+        <div *ngIf="email.errors.email">Format Emel Tidak Sah</div>
+			</div>
+		</div>
+		<div class="form-group mb-0">
+			<label>Kata Laluan</label>
+			<input
+				class="form-control"
+				type="password"
+				name="login[password]"
+				[(ngModel)]="login.kata_laluan"
+				required
+				[type]="show ? 'text' : 'password'"
+				#password="ngModel"
+				[ngClass]="{ 'is-invalid': f.submitted && password.invalid }"
+			/>
+			<div class="show-hide-3" (click)="showPassword()" *ngIf="!show">
+				<div style="margin-top: 4px; margin-right: -10px; color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-outline fa-lg"></i></div>
+			</div>
+			<div class="show-hide-3" (click)="showPassword()" *ngIf="show">
+				<div style="margin-top: 4px; margin-right: -10px; color: var(--theme-deafult); cursor: pointer;"><i class="mdi mdi-eye-off-outline fa-lg"></i></div>
+			</div>
+			<div *ngIf="f.submitted && password.invalid" class="invalid-feedback">
+				<div *ngIf="password.errors.required">Kata Laluan Wajib Diisi</div>
+			</div>
+		</div>
+		<div class="form-group mb-0 pb-2">
+			<a style="font-size: 12px;" class="link" [routerLink]="'/akaun/lupa-katalaluan'">Lupa Kata Laluan?</a>
+		</div>
+    <div class="form-group mt-4">
+			<button class="btn btn-primary btn-block" type="submit" [buttonBusy]="loading">Log Masuk</button>
+		</div>
+    <p class="mt-4 mb-0">
+			Tiada Akaun?
+			<a class="ml-2" [routerLink]="'/akaun/daftar'">Daftar Agensi</a>
+		</p>
+	</form>
+</div>

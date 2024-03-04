@@ -1,0 +1,40 @@
+/* ---------------------
+ *** Vendors Scss ***
+-----------------------*/
+
+@import "vendors/dropzone";
+@import "vendors/scrollable";
+@import "vendors/sticky";
+@import "vendors/todo";
+
+/* Ngx-owl-carousel-o */
+@import "~ngx-owl-carousel-o/lib/styles/scss/owl.carousel";
+@import "~ngx-owl-carousel-o/lib/styles/scss/owl.theme.default";
+
+/* Toastr */
+@import "~ngx-toastr/toastr.css";
+
+/* Dropzone */
+@import "~dropzone/dist/min/dropzone.min.css";
+
+/* Timeline */
+@import "~angular-vertical-timeline/dist/vertical-timeline.scss";
+
+/* Scrollbar */
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+
+/* Ng-select */
+@import "~@ng-select/ng-select/scss/default.theme.scss";
+
+/* Datetime */
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+/* ---------------------
+	*** Theme Scss ***
+-----------------------*/
+@import "~animate.css/animate.min.css";
+@import "~bootstrap/scss/bootstrap";
+@import "style";
+@import "responsive";
+
+

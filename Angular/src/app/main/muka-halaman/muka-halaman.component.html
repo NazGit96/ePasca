@@ -1,0 +1,644 @@
+<app-breadcrumb [title]="'Muka Halaman Utama'" [items]="['Muka Halaman']" [active_item]="'Utama'"></app-breadcrumb>
+<div class="container-fluid">
+  <!-- <div class="card">
+    <div class="card-body p-4">
+      <div class="row">
+        <div class="col justify-content-start">
+          <h5 class="mb-0"><span style="line-height: 29pt;">{{filterYear}}</span></h5>
+        </div>
+        <div class="col justify-content-end pull-right">
+          <div class="card-header-right-icon">
+            <button
+              type="button"
+              class="btn btn-primary pull-right"
+              (click)="isCollapsed = !isCollapsed"
+              [attr.aria-expanded]="!isCollapsed"
+              aria-controls="collapseExample"
+              ngbTooltip="Carian Lanjut"
+              style="font-weight: 500"
+            >
+              <i class="fa fa-filter"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-lg-12">
+              <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+                <div class="row mt-2 pr-3 pl-3">
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Tahun</label>
+                      <ng-select
+                        placeholder="Sila Pilih"
+                        class="js-example-placeholder-multiple disable-clear-all"
+                        [clearable]="false"
+                        name="tahun"
+                        [(ngModel)]="filterYear">
+                        <ng-option [value]="year" *ngFor="let year of arrayYear">
+                          {{year}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 pr-1">
+                    <div class="form-group custom-datepicker custom-datepicker-dropdown">
+                      <label>Tarikh</label>
+                      <div class="input-group">
+                        <input
+                          class="form-control"
+                          placeholder="DD/MM/YYYY"
+                          name="dp1"
+                          [(ngModel)]="fromDate"
+                          ngbDatepicker
+                          #b="ngbDatepicker"
+                          style="border: 1px solid #efefef !important;"
+                          (ngModelChange)="pilihTarikhMula()"
+                        >
+                        <div class="input-group-append">
+                          <button class="btn btn-light pr-2 pl-2" (click)="b.toggle()" type="button"><i
+                            class="fa fa-calendar"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 pl-1">
+                    <div class="form-group custom-datepicker custom-datepicker-dropdown">
+                      <div class="input-group pt-4 mt-1">
+                        <input
+                          class="form-control"
+                          placeholder="DD/MM/YYYY"
+                          name="dp2"
+                          [(ngModel)]="toDate"
+                          ngbDatepicker
+                          #c="ngbDatepicker"
+                          style="border: 1px solid #efefef !important;"
+                          [disabled]="!chooseFromDate"
+                        >
+                        <div class="input-group-append">
+                          <button class="btn btn-light pr-2 pl-2" (click)="c.toggle()" type="button" [disabled]="!chooseFromDate"><i
+                            class="fa fa-calendar"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Bencana</label>
+                      <ng-select
+                        placeholder="Sila Pilih"
+                        class="js-example-placeholder-multiple disable-clear-all"
+                        [clearable]="false"
+                        name="namaBencana"
+                        [(ngModel)]="filterIdBencana">
+                        <ng-option [value]="item.id" *ngFor="let item of bencanaList">
+                          {{item.nama_bencana + ': ' + (item.tarikh_bencana | date:'dd/MM/YYYY')}}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row no-gutters justify-content-end mb-2 pr-2">
+                  <button
+                    class="btn btn-light mr-2"
+                    type="button"
+                    (click)="resetMap()"
+                  >
+                  <i class="fa fa-refresh mr-2"></i>
+                    <b>Reset</b>
+                  </button>
+
+                  <button
+                    class="btn btn-primary pull-right mr-2"
+                    type="button"
+                    (click)="findFilter()"
+                  >
+                  <i class="fa fa-search mr-2"></i>
+                    <b>Cari</b>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="card">
+    <div class="card-header">
+      <div class="header-top">
+        <h6>Jumlah Mangsa Dan Bencana Mengikut Negeri</h6>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- //////////////////////////////// -->
+      <div class="toggle-container">
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showSeluruhMangsaNegeri" (change)="toggleTooltipValue('showSeluruhMangsaNegeri')">
+          Jumlah Seluruh Mangsa Negeri
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showKematianCovid" (change)="toggleTooltipValue('showKematianCovid')">
+          Jumlah Kematian
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanKematianCovid" (change)="toggleTooltipValue('showBantuanKematianCovid')">
+          Kos Bantuan Kematian
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showPenerimaRM100" (change)="toggleTooltipValue('showPenerimaRM100')">
+          Jumlah Penerima RM100 Sehari
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanRM100" (change)="toggleTooltipValue('showBantuanRM100')">
+          Kos Bantuan RM100 Sehari
+        </label>
+        <!-- /////////////////////////////////////////////// -->
+        <!-- //////////////////////////////////////////////// -->
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanRM100" (change)="toggleTooltipValue('showBantuanRM100')">
+          Jumlah Penerima BWI Kematian
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanRM100" (change)="toggleTooltipValue('showBantuanRM100')">
+          Kos BWI Kematian
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanRM100" (change)="toggleTooltipValue('showBantuanRM100')">
+          Jumlah Penerima Bantuan Lain
+        </label>
+        <label style="margin: 10px;">
+          <input type="checkbox" [(ngModel)]="showBantuanRM100" (change)="toggleTooltipValue('showBantuanRM100')">
+          Kos Bantuan Lain
+        </label>
+        <!-- Add more checkboxes for other tooltip values as needed -->
+      </div>
+      <!-- /////////////////////////////// -->
+      <div id="chartdiv" style="width: 100%; height: 500px"></div>
+    </div>
+  </div>
+  <!-- ///////////////////////////////////////////////// -->
+  <!-- ////////////////////////////////////////////// -->
+
+  <div class="row">
+    <!-- ///////////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Keseluruhan Mangsa</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">126,242 orang</h5> -->
+              <h5 style="font-weight:500">{{jumlahMangsa?.penerima | number:'1.0-2'}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan Keseluruhan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">RM 277,099,400.00</h5> -->
+              <h5 style="font-weight:500">RM {{ (jumlahMangsa?.jumlah? jumlahMangsa?.jumlah: 0) | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ///////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Kematian Covid-19</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">34,194 orang</h5> -->
+              <h5 style="font-weight:500">{{bantuanCovidKematian?.penerima | number:'1.0-2'}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan Kematian Covid-19</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">RM 170,970,000.00</h5> -->
+              <h5 style="font-weight:500">RM {{ (bantuanCovidKematian?.jumlah? bantuanCovidKematian?.jumlah: 0) |
+                number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ///////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Penerima RM 100 Sehari</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">92,048 orang</h5> -->
+              <h5 style="font-weight:500">{{bantuanCovid100?.penerima | number:'1.0-2'}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan Penerima RM 100 Sehari</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <!-- <h5 style="font-weight:500">RM 106,129,400.00</h5> -->
+              <h5 style="font-weight:500">RM {{ (bantuanCovid100?.jumlah? bantuanCovid100?.jumlah: 0) | number:'1.2-2'}}
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ///////////////////////////////////////// -->
+  <!-- ///////////////////////////////////////// -->
+  <div class="row">
+    <!-- ///////////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Seluruh Penerima BWI Dan Bantuan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">0 orang</h5>
+              <!-- <h5 style="font-weight:500">{{jumlahMangsa?.penerima | number:'1.0-2'}} orang</h5> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos BWI Keseluruhan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM 0.00</h5>
+              <!-- <h5 style="font-weight:500">RM {{ (jumlahMangsa?.jumlah? jumlahMangsa?.jumlah: 0) | number:'1.2-2'}}</h5> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ///////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Penerima BWI Kematian</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">0 orang</h5>
+              <!-- <h5 style="font-weight:500">{{bantuanCovidKematian?.penerima | number:'1.0-2'}} orang</h5> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos BWI Kematian</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM 0.00</h5>
+              <!-- <h5 style="font-weight:500">RM {{ (bantuanCovidKematian?.jumlah? bantuanCovidKematian?.jumlah: 0) |
+                number:'1.2-2'}}</h5> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ///////////////////////////////////// -->
+    <div class="col-lg-4 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="user"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: default;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Penerima Bantuan-Bantuan Lain</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">0 orang</h5>
+              <!-- <h5 style="font-weight:500">{{bantuanCovid100?.penerima | number:'1.0-2'}} orang</h5> -->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan-Bantuan Lain</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM 0.00</h5>
+              <!-- <h5 style="font-weight:500">RM {{ (bantuanCovid100?.jumlah? bantuanCovid100?.jumlah: 0) | number:'1.2-2'}}
+              </h5> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ///////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="dollar-sign"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Penerima Wang Ihsan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahIhsan?.penerima}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bantuan Wang Ihsan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{(jumlahIhsan?.jumlah ? jumlahIhsan?.jumlah : 0) | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- /////////////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="box"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Pinjaman Khas</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahPinjaman?.penerima}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bantuan Pinjaman Khas</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{(jumlahPinjaman?.jumlah ? jumlahPinjaman?.jumlah: '0') | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- ////////////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="send"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bantuan Antarabangsa</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahAntarabangsa?.penerima}} orang</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bantuan Antarabangsa</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{ (jumlahAntarabangsa?.jumlah ? jumlahAntarabangsa?.jumlah: '0') | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- ///////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="triangle"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Rumah Dibaik Pulih</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahRumahBaikPulih?.penerima}} buah</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Baik Pulih Rumah</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{ (jumlahRumahBaikPulih?.jumlah ? jumlahRumahBaikPulih?.jumlah: '0') | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- ////////////////////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="home"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bina Rumah Kekal</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahRumahKekal?.penerima}} buah</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bina Rumah Kekal</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{ (jumlahRumahKekal?.jumlah ? jumlahRumahKekal?.jumlah: '0') | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- /////////////////////////////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="droplet"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Bantuan Pertanian</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahPertanian?.penerima}} bantuan</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{ (jumlahPertanian?.jumlah ? jumlahPertanian?.jumlah: 0) | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- //////////////////////////////////////////////////////// -->
+  <!-- <div class="col-lg-3 d-flex align-content-stretch flex-wrap row-wide-cards">
+      <div class="card bg-primary">
+        <div class="media static-top-widget">
+          <div class="media-body">
+            <i class="icon-bg" data-feather="file-text"></i>
+          </div>
+        </div>
+        <div class="card-body" style="text-align:start; padding:20px; cursor: pointer;">
+          <div class="row">
+            <div class="col-12">
+              <label>Jumlah Lain-Lain Bantuan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">{{jumlahLain?.penerima}} bantuan</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label>Kos Bantuan</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5 style="font-weight:500">RM {{ (jumlahLain?.jumlah ? jumlahLain?.jumlah: '0') | number:'1.2-2'}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  <!-- ////////////////////////////////////// -->
+  <!-- </div> -->
+  <!-- /////////////////////////////////////////// -->
+  <!-- ///////////////////////////////////////////// -->
+
+  <!-- <div class="card">
+    <div class="card-header">
+      <div class="header-top">
+        <h6>Jumlah Bantuan Mengikut Negeri</h6>
+      </div>
+    </div>
+		<div class="card-body">
+			<div id="chartdiv2" style="width: 100%; height: 400px"></div>
+		</div>
+	</div> -->
+</div>

@@ -1,0 +1,626 @@
+<app-breadcrumb
+	[title]="'Kemaskini Tabung'"
+	[items]="['Pengurusan Tabung', 'Tabung']"
+	[active_item]="['Kemaskini']"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<form class="form theme-form" name="form" #f="ngForm" (ngSubmit)="f.form.valid && save()" novalidate focusInvalidInput>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label>Nama Tabung*</label>
+									<input
+                    class="form-control"
+                    type="text"
+                    name="nama_tabung"
+                    [(ngModel)]="getTabung.tabung.nama_tabung"
+                    placeholder="Nama Tabung"
+                    #namaTabung="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && namaTabung.invalid }"
+                    required
+                  />
+                  <div *ngIf="f.submitted && namaTabung.invalid" class="invalid-feedback">
+                    <div *ngIf="namaTabung.errors.required">Nama Tabung Wajib Diisi</div>
+                  </div>
+								</div>
+							</div>
+
+              <div class="col-lg-6">
+								<div class="form-group">
+									<label>Kategori Tabung</label>
+									<input
+                    class="form-control"
+                    name="kategori_tabung"
+                    [(ngModel)]="nama_kategori_tabung"
+                    disabled
+                  />
+								</div>
+							</div>
+						</div>
+
+            <div class="row">
+							<div class="col">
+								<div class="form-group mb-3">
+									<label>Catatan</label>
+									<textarea
+                    class="form-control"
+                    name="catatan"
+                    [(ngModel)]="getTabung.tabung.catatan"
+                    rows="3"
+                    placeholder="Catatan"
+                  ></textarea>
+								</div>
+							</div>
+						</div>
+            <hr>
+
+            <h6>Maklumat Keseluruhan</h6><br>
+            <div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Dana Awal:</label><br>
+									<label *ngIf="getTabung.dana_awal">RM {{getTabung.dana_awal | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.dana_awal">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+                  <label>Jumlah Dana Tambahan:</label><br>
+									<label *ngIf="getTabung.dana_tambahan">RM {{getTabung.dana_tambahan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.dana_tambahan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Baki Bawaan:</label><br>
+                  <label *ngIf="getTabung.tabung.baki_bawaan">RM {{getTabung.tabung.baki_bawaan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.tabung.baki_bawaan">RM 0.00</label>
+								</div>
+							</div>
+            </div>
+
+						<div class="row">
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Keseluruhan:</label><br>
+									<label *ngIf="getTabung.tabung.jumlah_keseluruhan">RM {{getTabung.tabung.jumlah_keseluruhan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.tabung.jumlah_keseluruhan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Kelulusan:</label><br>
+                  <label *ngIf="getTabung.tabung.peruntukan">RM {{getTabung.tabung.peruntukan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.tabung.peruntukan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Perbelanjaan:</label><br>
+                  <label *ngIf="getTabung.tabung.jumlah_perbelanjaan_semasa">RM {{getTabung.tabung.jumlah_perbelanjaan_semasa | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.tabung.jumlah_perbelanjaan_semasa">RM 0.00</label>
+								</div>
+							</div>
+            </div>
+
+            <div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Baki Semasa:</label><br>
+                  <label *ngIf="getTabung.tabung.jumlah_baki_semasa">RM {{getTabung.tabung.jumlah_baki_semasa | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.tabung.jumlah_baki_semasa">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Peruntukan Diambil:</label><br>
+                  <label *ngIf="getTabung.peruntukan_diambil">RM {{getTabung.peruntukan_diambil | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.peruntukan_diambil">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Tanggungan:</label><br>
+                  <label *ngIf="getTabung.jumlah_tanggungan">RM {{getTabung.jumlah_tanggungan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabung.jumlah_tanggungan">RM 0.00</label>
+								</div>
+							</div>
+            </div>
+            <br>
+
+
+            <div class="row">
+              <div class="col">
+                <h6>Maklumat Semasa ({{currentYear}})</h6>
+              </div>
+
+              <div class="col-lg-2 no-gutters justify-content-end mb-2">
+                <div class="form-group">
+                  <ng-select
+                    [items]="arrayYear"
+                    bindLabel="years"
+                    bindValue="years"
+                    placeholder="Tahun"
+                    class="js-example-placeholder-multiple"
+                    name="tahunTabung"
+                    [(ngModel)]="filterYear"
+                    (ngModelChange)= "getTabungByYear(filterYear)"
+                  ></ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Baki Bawaan:</label><br>
+									<label *ngIf="getTabungYear.baki_bawaan">RM {{getTabungYear.baki_bawaan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.baki_bawaan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+                  <label>Jumlah Dana Tambahan:</label><br>
+									<label *ngIf="getTabungYear.dana_tambahan">RM {{getTabungYear.dana_tambahan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.dana_tambahan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Kelulusan:</label><br>
+                  <label *ngIf="getTabungYear.jumlah_kelulusan">RM {{getTabungYear.jumlah_kelulusan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.jumlah_kelulusan">RM 0.00</label>
+								</div>
+							</div>
+            </div>
+
+            <div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Peruntukan Diambil:</label><br>
+									<label *ngIf="getTabungYear.peruntukan_diambil">RM {{getTabungYear.peruntukan_diambil | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.peruntukan_diambil">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+                  <label>Jumlah Tanggungan:</label><br>
+									<label *ngIf="getTabungYear.jumlah_tanggungan">RM {{getTabungYear.jumlah_tanggungan | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.jumlah_tanggungan">RM 0.00</label>
+								</div>
+							</div>
+
+              <div class="col-lg-4">
+								<div class="form-group">
+									<label>Jumlah Perbelanjaan:</label><br>
+                  <label *ngIf="getTabungYear.jumlah_belanja">RM {{getTabungYear.jumlah_belanja | number: '1.2-2'}}</label>
+                  <label *ngIf="!getTabungYear.jumlah_belanja">RM 0.00</label>
+								</div>
+							</div>
+            </div>
+            <br>
+
+						<h6>Terimaan Tambahan</h6>
+            <div class="row no-gutters justify-content-end mb-2">
+              <button class="btn btn-primary" type="button" (click)="addTabungPeruntukan(idTabung)">
+                <i class="fa fa-plus mr-2"></i>
+                <b>Tambah</b>
+              </button>
+            </div>
+
+            <div class="row no-gutters align-items-center">
+              <div class="primeng-datatable-container">
+                <p-table
+                  #dataTable
+                  styleClass="p-datatable-striped"
+                  [resizableColumns]="true"
+                  (onLazyLoad)="getTabungPeruntukan($event)"
+                  [loading]="primengTableHelper.isLoading"
+                  [value]="primengTableHelper.records"
+                  rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                  [paginator]="false"
+                  [lazy]="true"
+                  [scrollable]="true"
+                  ScrollWidth="100%"
+                  [responsive]="primengTableHelper.isResponsive"
+                  [resizableColumns]="primengTableHelper.resizableColumns"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 100px" pSortableColumn="tarikh_peruntukan">
+                        Tarikh
+                        <p-sortIcon field="tarikh_peruntukan"></p-sortIcon>
+                      </th>
+                      <th style="width: 135px" pSortableColumn="no_rujukan">
+                        No. Rujukan
+                        <p-sortIcon field="no_rujukan"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="nama_peruntukan">
+                        Nama
+                        <p-sortIcon field="nama_peruntukan"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="jumlah">
+                        Jumlah
+                        <p-sortIcon field="jumlah"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="catatan">
+                        Catatan
+                        <p-sortIcon field="catatan"></p-sortIcon>
+                      </th>
+                      <th style="width: 170px" pSortableColumn="nama">
+                        Dikemaskini Oleh
+                        <p-sortIcon field="nama"></p-sortIcon>
+                      </th>
+                      <th style="width: 160px">Tindakan</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-record="$implicit">
+                    <tr>
+                      <td style="width: 100px">
+                        <span class="p-column-title">tarikh</span>
+                        {{record.tarikh_peruntukan | date:'dd-MM-yyyy'}}
+                      </td>
+                      <td style="width: 135px">
+                        <span class="p-column-title">No. Rujukan</span>
+                        {{record.no_rujukan}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Nama</span>
+                        {{record.nama_peruntukan}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Jumlah</span>
+                        RM {{record.jumlah | number: '1.2-2'}}
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Catatan</span>
+                        <label *ngIf="record.catatan">{{record.catatan}}</label>
+                        <label *ngIf="!record.catatan">-</label>
+                      </td>
+                      <td style="width: 170px">
+                        <span class="p-column-title">Dikemaskini Oleh</span>
+                        <label *ngIf="record.nama">{{record.nama}}</label>
+                        <label *ngIf="!record.nama">-</label>
+                      </td>
+                      <td style="width: 160px">
+                        <div ngbDropdown class="btn-group" role="group" container="body">
+                          <button
+                            *ngIf="record.nama_peruntukan != 'Dana Awal'"
+                            type="button"
+                            class="btn btn-primary btn-primeng dropdown-toggle"
+                            id="action"
+                            ngbDropdownToggle
+                          >
+                            <i class="fa fa-cog"></i>
+                            <span class="caret"></span>
+                            Tindakan
+                          </button>
+                          <div ngbDropdownMenu aria-labelledby="action">
+                            <button
+                              class="dropdown-item"
+                              (click)="editTabungPeruntukan(record.id)"
+                            >
+                              Lihat
+                            </button>
+                            <button
+                              class="dropdown-item"
+                              (click)="deleteTabungPeruntukan(record.id)"
+                            >
+                              Padam
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">Tiada Data</div>
+                <div class="primeng-paging-container justify-content-between">
+                  <p-paginator
+                    [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                    #paginator
+                    (onPageChange)="getTabungPeruntukan($event)"
+                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+                  ></p-paginator>
+                  <span class="total-records-count">Jumlah: {{ primengTableHelper.totalRecordsCount}}</span>
+                </div>
+              </div>
+            </div>
+
+            <h6 *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan')">Kelulusan</h6>
+            <div class="row no-gutters justify-content-end mb-2" *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan.Tambah')">
+              <button class="btn btn-primary" type="button" [routerLink]="'/app/tabung/kelulusan/tambah'" [queryParams]="{idTabung: idTabung, namaTabung: getTabung.tabung.nama_tabung, tabungTambahKelulusan: tabungTambahKelulusan}">
+                <i class="fa fa-plus mr-2"></i>
+                <b>Tambah</b>
+              </button>
+            </div>
+
+            <div class="row no-gutters align-items-center" *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan')">
+              <div class="primeng-datatable-container">
+                <p-table
+                  #dataTable
+                  styleClass="p-datatable-striped"
+                  [resizableColumns]="true"
+                  (onLazyLoad)="getKelulusan($event)"
+                  [loading]="primengTableHelperKelulusan.isLoading"
+                  [value]="primengTableHelperKelulusan.records"
+                  rows="{{primengTableHelperKelulusan.defaultRecordsCountPerPage}}"
+                  [paginator]="false"
+                  [lazy]="true"
+                  [scrollable]="true"
+                  ScrollWidth="100%"
+                  [responsive]="primengTableHelperKelulusan.isResponsive"
+                  [resizableColumns]="primengTableHelperKelulusan.resizableColumns"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 144px" pSortableColumn="kelulusan.no_rujukan_kelulusan">
+                        No. Rujukan
+                        <p-sortIcon field="kelulusan.no_rujukan_kelulusan"></p-sortIcon>
+                      </th>
+                      <th style="width: 160px" pSortableColumn="kelulusan.nama_tabung">
+                        Tabung
+                        <p-sortIcon field="kelulusan.nama_tabung"></p-sortIcon>
+                      </th>
+                      <th style="width: 135px" pSortableColumn="kelulusan.tarikh_surat">
+                        Tarikh Surat
+                        <p-sortIcon field="kelulusan.tarikh_surat"></p-sortIcon>
+                      </th>
+                      <th style="width: 145px" pSortableColumn="kelulusan.rujukan_surat">
+                        Rujukan Surat
+                        <p-sortIcon field="kelulusan.rujukan_surat"></p-sortIcon>
+                      </th>
+                      <th style="width: 170px" pSortableColumn="kelulusan.jumlah_siling">
+                        Siling Peruntukan
+                        <p-sortIcon field="kelulusan.jumlah_siling"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="kelulusan.tarikh_mula_kelulusan">
+                        Tarikh Mula
+                        <p-sortIcon field="kelulusan.tarikh_mula_kelulusan"></p-sortIcon>
+                      </th>
+                      <th style="width: 137px" pSortableColumn="kelulusan.tarikh_tamat_kelulusan">
+                        Tarikh Tamat
+                        <p-sortIcon field="kelulusan.tarikh_tamat_kelulusan"></p-sortIcon>
+                      </th>
+                      <th style="width: 170px" pSortableColumn="belanja">
+                        Jumlah Belanja
+                        <p-sortIcon field="belanja"></p-sortIcon>
+                      </th>
+                      <th style="width: 170px" pSortableColumn="kelulusan.baki_jumlah_siling">
+                        Baki Peruntukan
+                        <p-sortIcon field="kelulusan.baki_jumlah_siling"></p-sortIcon>
+                      </th>
+                      <th style="width: 130px" pSortableColumn="kelulusan.status_tabung">
+                        Status
+                        <p-sortIcon field="kelulusan.status_tabung"></p-sortIcon>
+                      </th>
+                      <th *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan.Edit') ||
+                      _appSession.isGranted('Halaman.Tabung.Bayaran.SKB.Tambah') || _appSession.isGranted('Halaman.Tabung.Bayaran.Terus.Tambah')" style="width: 160px">Tindakan</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-records="$implicit">
+                    <tr>
+                      <td style="width: 144px">
+                        <span class="p-column-title">No. Rujukan</span>
+                        {{records.kelulusan.no_rujukan_kelulusan}}
+                      </td>
+                      <td style="width: 160px">
+                        <span class="p-column-title">Tabung</span>
+                        {{records.kelulusan.nama_tabung}}
+                      </td>
+                      <td style="width: 135px">
+                        <span class="p-column-title">Tarikh Surat</span>
+                        {{records.kelulusan.tarikh_surat | date:'dd-MM-yyyy'}}
+                      </td>
+                      <td style="width: 145px">
+                        <span class="p-column-title">Rujukan Surat</span>
+                        {{records.kelulusan.rujukan_surat}}
+                      </td>
+                      <td style="width: 170px">
+                        <span class="p-column-title">Siling Peruntukan</span>
+                        <label *ngIf="records.kelulusan.jumlah_siling">RM {{records.kelulusan.jumlah_siling | number: '1.2-2'}}</label>
+                        <label *ngIf="!records.kelulusan.jumlah_siling">RM 0.00</label>
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Tarikh Mula</span>
+                        {{records.kelulusan.tarikh_mula_kelulusan | date:'dd-MM-yyyy'}}
+                      </td>
+                      <td style="width: 137px">
+                        <span class="p-column-title">Tarikh Tamat</span>
+                        <label *ngIf="records.kelulusan.tarikh_tamat_kelulusan">{{records.kelulusan.tarikh_tamat_kelulusan | date:'dd-MM-yyyy'}}</label>
+                        <label *ngIf="!records.kelulusan.tarikh_tamat_kelulusan">-</label>
+                      </td>
+                      <td style="width: 170px">
+                        <span class="p-column-title">Jumlah Belanja</span>
+                        <label *ngIf="records.belanja">RM {{records.belanja | number: '1.2-2'}}</label>
+                        <label *ngIf="!records.belanja">RM 0.00</label>
+                      </td>
+                      <td style="width: 170px">
+                        <span class="p-column-title">Baki Peruntukan</span>
+                        <label *ngIf="records.kelulusan.baki_jumlah_siling">RM {{records.kelulusan.baki_jumlah_siling | number: '1.2-2'}}</label>
+                        <label *ngIf="!records.kelulusan.baki_jumlah_siling">RM 0.00</label>
+                      </td>
+                      <td style="width: 130px">
+                        <span class="p-column-title">Status</span>
+                        {{records.kelulusan.status_tabung == 1? "Aktif":"Tidak Aktif"}}
+                      </td>
+                      <td style="width: 160px" *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan.Edit') ||
+                      _appSession.isGranted('Halaman.Tabung.Bayaran.SKB.Tambah') || _appSession.isGranted('Halaman.Tabung.Bayaran.Terus.Tambah')">
+                        <div ngbDropdown class="btn-group" role="group" container="body">
+                          <button
+                            type="button"
+                            class="btn btn-primary btn-primeng dropdown-toggle"
+                            id="action"
+                            ngbDropdownToggle
+                          >
+                            <i class="fa fa-cog"></i>
+                            <span class="caret"></span>
+                            Tindakan
+                          </button>
+                          <div ngbDropdownMenu aria-labelledby="action">
+                            <a
+                              class="dropdown-item"
+                              [routerLink]="'/app/tabung/kelulusan/edit'"
+                              [queryParams]="{id: records.kelulusan.id, idTabung: idTabung, tabungKemaskiniKelulusan: tabungKemaskiniKelulusan}"
+                              *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan.Edit')"
+                            >
+                              Lihat
+                            </a>
+                            <a
+                              class="dropdown-item"
+                              style="cursor: pointer;"
+                              (click)="peruntukanDiambilModal(records.kelulusan.id, records.kelulusan.baki_jumlah_siling)"
+                              *ngIf="_appSession.isGranted('Halaman.Tabung.Kelulusan.Edit')"
+                            >
+                              Peruntukan Diambil
+                            </a>
+                            <a
+                              class="dropdown-item"
+                              [routerLink]="['/app/tabung/skb/tambah']"
+                              [queryParams]="{kelulusan: records.kelulusan.id, no_ruj: records.kelulusan.no_rujukan_kelulusan}"
+                              *ngIf="_appSession.isGranted('Halaman.Tabung.Bayaran.SKB.Tambah')"
+                            >
+                              Pembayaran SKB
+                            </a>
+                            <a
+                              class="dropdown-item"
+                              [routerLink]="['/app/tabung/terus/tambah']"
+                              [queryParams]="{kelulusan: records.kelulusan.id, no_ruj: records.kelulusan.no_rujukan_kelulusan}"
+                              *ngIf="_appSession.isGranted('Halaman.Tabung.Bayaran.Terus.Tambah')"
+                            >
+                              Pembayaran Secara Terus
+                            </a>
+                            <a
+                              class="dropdown-item"
+                              [routerLink]="['/app/tabung/waran/tambah']"
+                              [queryParams]="{kelulusan: records.kelulusan.id, no_ruj: records.kelulusan.no_rujukan_kelulusan}"
+                              *ngIf="_appSession.isGranted('Halaman.Tabung.Bayaran.Waran.Tambah') && (getTabung.tabung.kategori_tabung == 2)"
+                            >
+                              Pembayaran Secara Waran
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelperKelulusan.totalRecordsCount == 0">Tiada Data</div>
+                <div class="primeng-paging-container justify-content-between">
+                  <p-paginator
+                    [rows]="primengTableHelperKelulusan.defaultRecordsCountPerPage"
+                    #paginator
+                    (onPageChange)="getKelulusan($event)"
+                    [totalRecords]="primengTableHelperKelulusan.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelperKelulusan.predefinedRecordsCountPerPage"
+                  ></p-paginator>
+                  <span class="total-records-count">Jumlah: {{ primengTableHelperKelulusan.totalRecordsCount}}</span>
+                </div>
+              </div>
+            </div>
+
+						<h6>Sejarah Transaksi</h6><br>
+            <div class="row no-gutters align-items-center">
+              <div class="primeng-datatable-container">
+                <p-table
+                  #dataTable
+                  styleClass="p-datatable-striped"
+                  [resizableColumns]="true"
+                  (onLazyLoad)="getSejarahKemaskini($event)"
+                  [loading]="primengTableHelperSejarah.isLoading"
+                  [value]="primengTableHelperSejarah.records"
+                  rows="{{primengTableHelperSejarah.defaultRecordsCountPerPage}}"
+                  [paginator]="false"
+                  [lazy]="true"
+                  [scrollable]="true"
+                  ScrollWidth="100%"
+                  [responsive]="primengTableHelperSejarah.isResponsive"
+                  [resizableColumns]="primengTableHelperSejarah.resizableColumns"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 100px" pSortableColumn="tarikh">
+                        Tarikh Cipta
+                        <p-sortIcon field="tarikh"></p-sortIcon>
+                      </th>
+                      <th style="width: 100px" pSortableColumn="no_ruj">
+                        No. Rujukan
+                        <p-sortIcon field="no_ruj"></p-sortIcon>
+                      </th>
+                      <th style="width: 100px" pSortableColumn="aktiviti">
+                        Aktiviti
+                        <p-sortIcon field="aktiviti"></p-sortIcon>
+                      </th>
+                      <th style="width: 100px" pSortableColumn="jumlah">
+                        Jumlah
+                        <p-sortIcon field="jumlah"></p-sortIcon>
+                      </th>
+                      <th style="width: 170px" pSortableColumn="nama">
+                        Dikemaskini Oleh
+                        <p-sortIcon field="nama"></p-sortIcon>
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-records="$implicit">
+                    <tr>
+                      <td style="width: 100px">
+                        <span class="p-column-title">Tarikh Cipta</span>
+                        {{records.tarikh | date:'dd-MM-yyyy'}}
+                      </td>
+                      <td style="width: 100px">
+                        <span class="p-column-title">No. Rujukan</span>
+                        {{records.no_ruj}}
+                      </td>
+                      <td style="width: 100px">
+                        <span class="p-column-title">Aktiviti</span>
+                        {{records.aktiviti}}
+                      </td>
+                      <td style="width: 100px">
+                        <span class="p-column-title">Jumlah</span>
+                        <label *ngIf="records.jumlah">RM {{records.jumlah | number: '1.2-2'}}</label>
+                        <label *ngIf="!records.jumlah">RM 0.00</label>
+                      </td>
+                      <td style="width: 170px">
+                        <span class="p-column-title">Dikemaskini Oleh</span>
+                        {{records.nama}}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <div class="primeng-no-data" *ngIf="primengTableHelperSejarah.totalRecordsCount == 0">Tiada Data</div>
+                <div class="primeng-paging-container justify-content-between">
+                  <p-paginator
+                    [rows]="primengTableHelperSejarah.defaultRecordsCountPerPage"
+                    #paginator
+                    (onPageChange)="getSejarahKemaskini($event)"
+                    [totalRecords]="primengTableHelperSejarah.totalRecordsCount"
+                    [rowsPerPageOptions]="primengTableHelperSejarah.predefinedRecordsCountPerPage"
+                  ></p-paginator>
+                  <span class="total-records-count">Jumlah: {{ primengTableHelperSejarah.totalRecordsCount}}</span>
+                </div>
+              </div>
+            </div>
+
+						<button class="btn btn-primary pull-right" type="submit">Simpan</button>
+						<button class="btn btn-light pull-right mr-2" (click)="back()" type="button">
+							Kembali
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

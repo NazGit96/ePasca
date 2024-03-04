@@ -1,0 +1,234 @@
+<app-breadcrumb
+	[title]="'Laporan BWI Mengikut Bencana dan Ketua Isi Rumah'"
+	[items]="['Laporan', 'BWI']"
+	[active_item]="'Bencana-KIR'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="row mb-1">
+            <div class="col-lg-6 col-sm-10 justify-content-start pl-0">
+              <div class="faq-form">
+                <input
+                  class="form-control"
+                  type="text"
+                  name="searchReportSkb"
+                  placeholder="Carian..."
+                  (keyup)="applyFilter($event.target.value)"
+                  [(ngModel)]="filterString"
+                />
+                <i class="search-icon" data-feather="search"></i>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-2 justify-content-between pl-0">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed"
+                aria-controls="collapseExample"
+                ngbTooltip="Carian Lanjut"
+                style="font-weight: 500"
+              >
+                <i class="fa fa-filter"></i>
+              </button>
+            </div>
+
+            <div class="col-lg-4 col-sm-12 justify-content-end p-0">
+              <button type="button" (click)="exportToExcel()" class="btn btn-outline-success pull-right">
+                <i class="fa fa-file-excel-o fa-lg mr-2"></i>
+                <b>Excel</b>
+              </button>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+                    <form>
+                      <div class="row mt-2">
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label>Bencana</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                type="text"
+                                placeholder="Nama Bencana"
+                                name="bencana"
+                                [(ngModel)]="nama_bencana"
+                                readonly
+                              />
+                              <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="pilihBencana()" type="button">
+                                  <i class="fa fa-search text-white"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label>Tahun Bencana</label>
+                            <ng-select
+                              [items]="arrayYear"
+                              bindLabel="years"
+                              bindValue="years"
+                              placeholder="Sila Pilih"
+                              class="js-example-placeholder-multiple"
+                              name="tahunBayaran"
+                              [(ngModel)]="filterYear"
+                            ></ng-select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row justify-content-end mb-3 pr-2">
+                        <button
+                          class="btn btn-light mr-2"
+                          type="button"
+                          (click)="resetFilter()"
+                        >
+                        <i class="fa fa-refresh mr-2"></i>
+                          <b>Reset</b>
+                        </button>
+
+                        <button
+                          class="btn btn-primary pull-right mr-2"
+                          type="button"
+                          (click)="getBencanaKirReport()"
+                        >
+                        <i class="fa fa-search mr-2"></i>
+                          <b>Cari</b>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+					<div class="row align-items-center">
+						<div class="primeng-datatable-container">
+							<p-table
+								#dataTable
+								styleClass="p-datatable-striped"
+								[resizableColumns]="true"
+								(onLazyLoad)="getBencanaKirReport($event)"
+								[value]="primengTableHelper.records"
+								rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+								[paginator]="false"
+								[lazy]="true"
+                [loading]="primengTableHelper.isLoading"
+								[scrollable]="true"
+								ScrollWidth="100%"
+								[responsive]="primengTableHelper.isResponsive"
+								[resizableColumns]="primengTableHelper.resizableColumns"
+							>
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width: 130px" pSortableColumn="nama_bencana">
+											Bencana
+											<p-sortIcon field="nama_bencana"></p-sortIcon>
+										</th>
+										<th style="width: 80px" pSortableColumn="jumlah">
+											BWI/KIR
+											<p-sortIcon field="jumlah"></p-sortIcon>
+										</th>
+										<th style="width: 70px" pSortableColumn="bil">
+											Bil. KIR
+											<p-sortIcon field="bil"></p-sortIcon>
+										</th>
+										<th style="width: 135px" pSortableColumn="jumlah_peruntukan">
+											Jumlah Peruntukan
+											<p-sortIcon field="jumlah_peruntukan"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="jumlah_dipulangkan">
+											Baki Dipulangkan
+											<p-sortIcon field="jumlah_dipulangkan"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="jumlah_diagihkan">
+											Jumlah Diagihkan
+											<p-sortIcon field="jumlah_diagihkan"></p-sortIcon>
+										</th>
+                    <th style="width: 150px" pSortableColumn="tarikh_bencana">
+											Tarikh Bencana
+											<p-sortIcon field="tarikh_bencana"></p-sortIcon>
+										</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-record="$implicit">
+									<tr>
+										<td style="width: 130px">
+											<span class="p-column-title">Jenis Bencana</span>
+											{{record.nama_bencana | titlecase}}
+										</td>
+										<td style="width: 80px">
+											<span class="p-column-title">BWI/KIR</span>
+                      <label *ngIf="record.jumlah">RM {{record.jumlah | number: '1.2-2'}}</label>
+                      <label *ngIf="!record.jumlah">RM 0.00</label>
+										</td>
+										<td style="width: 70px">
+											<span class="p-column-title">Bil. KIR</span>
+											{{record.bil}}
+										</td>
+										<td style="width: 135px">
+											<span class="p-column-title">Jumlah Peruntukan</span>
+                      <label *ngIf="record.jumlah_peruntukan">RM {{record.jumlah_peruntukan | number: '1.2-2'}}</label>
+                      <label *ngIf="!record.jumlah_peruntukan">RM 0.00</label>
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Baki Dipulangkan</span>
+                      <label *ngIf="record.jumlah_dipulangkan">RM {{record.jumlah_dipulangkan | number: '1.2-2'}}</label>
+                      <label *ngIf="!record.jumlah_dipulangkan">RM 0.00</label>
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Jumlah Diagihkan</span>
+                      <label *ngIf="record.jumlah_diagihkan">RM {{record.jumlah_diagihkan | number: '1.2-2'}}</label>
+                      <label *ngIf="!record.jumlah_diagihkan">RM 0.00</label>
+										</td>
+                    <td style="width: 150px">
+											<span class="p-column-title">Tarikh Bencana</span>
+											{{record.tarikh_bencana | date:'dd-MM-yyyy'}}
+										</td>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="footer">
+									<tr>
+										<td style="width: 130px; background-color: #f9f9f9;"></td>
+										<td style="width: 80px; background-color: #f9f9f9;"></td>
+										<td style="width: 70px;">{{total_kir}}</td>
+										<td style="width: 135px;">RM {{total_peruntukan | number: '1.2-2'}}</td>
+										<td style="width: 130px;">RM {{total_dipulangkan | number: '1.2-2'}}</td>
+										<td style="width: 130px;">RM {{total_diagihkan | number: '1.2-2'}}</td>
+                    <td style="width: 150px; background-color: #f9f9f9;"></td>
+									</tr>
+								</ng-template>
+							</p-table>
+							<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">Tiada Data</div>
+							<div class="primeng-paging-container justify-content-between">
+								<p-paginator
+									[rows]="primengTableHelper.defaultRecordsCountPerPage"
+									#paginator
+									(onPageChange)="getBencanaKirReport($event)"
+									[totalRecords]="primengTableHelper.totalRecordsCount"
+									[rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+								></p-paginator>
+								<span class="total-records-count">
+									Jumlah: {{ primengTableHelper.totalRecordsCount}}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

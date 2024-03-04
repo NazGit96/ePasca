@@ -1,0 +1,31 @@
+<div class="login-main">
+	<form class="theme-form" name="form" #f="ngForm" (ngSubmit)="f.form.valid && save()" novalidate>
+		<h4>Lupa Kata Laluan</h4>
+		<p>Sila masukkan alamat emel untuk lupa kata laluan</p>
+		<div class="form-group">
+			<label>Emel*</label>
+			<input
+				class="form-control"
+				type="email"
+				name="reset_password"
+				required=""
+				placeholder="Emel Pengguna"
+				[(ngModel)]="password.emel"
+				required
+				#email="ngModel"
+				[ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+			/>
+			<div *ngIf="f.submitted && email.invalid" class="invalid-feedback">
+				<div *ngIf="email.errors.required">Email Wajib Diisi</div>
+			</div>
+		</div>
+		<div class="form-group mb-0">
+			<button class="btn btn-primary btn-block" type="submit">Hantar Emel</button>
+		</div>
+		<div>
+			<p class="mt-4 mb-0">
+				<a [routerLink]="'/akaun/log-masuk'">Kembali ke Log Masuk</a>
+			</p>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,304 @@
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && uploadImage()">
+  <div class="row">
+    <div class="col-lg-3">
+      <form [formGroup]="secondFormGroup">
+        <div class="card shadow shadow-showcase" *ngIf="getMangsa.mangsa.gambar">
+          <div class="product-box">
+            <div class="product-img image-center">
+              <img class="img-fluid" [src]="getMangsa.mangsa.gambar" alt="profile-image" />
+              <div class="product-hover" *ngIf="_appSession.isGranted('Halaman.Mangsa.Edit')">
+                <ngx-dropzone (change)="onSelect($event)" accept="image/jpeg,image/jpg,image/png">
+                  <ngx-dropzone-label>Kemaskini Gambar</ngx-dropzone-label>
+                </ngx-dropzone>
+              </div>
+              <div *ngFor="let f of files" [file]="f">
+                <label>{{ f.name }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow shadow-showcase" *ngIf="!getMangsa.mangsa.gambar">
+          <div class="product-box">
+            <div class="product-img image-center">
+              <img class="img-fluid" src="/assets/images/other-images/default-image.jpg" alt="profile-image" />
+              <div class="product-hover" *ngIf="_appSession.isGranted('Halaman.Mangsa.Edit')">
+                <ngx-dropzone (change)="onSelect($event)" accept="image/jpeg,image/jpg,image/png">
+                  <ngx-dropzone-label>Kemaskini Gambar</ngx-dropzone-label>
+                </ngx-dropzone>
+              </div>
+              <div *ngFor="let f of files" [file]="f">
+                <label>{{ f.name }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-9">
+      <h6>Maklumat Diri Mangsa</h6>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="form-group">
+            <label>Nama*</label>
+            <input
+              class="form-control"
+              name="nama"
+              [(ngModel)]="getMangsa.mangsa.nama"
+              placeholder="Nama"
+              #namaMangsa="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && namaMangsa.invalid }"
+              required
+              [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+            />
+            <div *ngIf="f.submitted && namaMangsa.invalid" class="invalid-feedback">
+              <div *ngIf="namaMangsa.errors.required">Nama Wajib Diisi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label>No. Kad Pengenalan*</label>
+            <input
+              class="form-control"
+              name="no_kp"
+              [(ngModel)]="getMangsa.mangsa.no_kp"
+              placeholder="No. Kad Pengenalan"
+              #noKp="ngModel"
+              [class.is-invalid]="((noKp.touched || noKp.dirty) && noKp.errors?.stateCodeInvalid && noKp.errors?.valueInvalid) || f.submitted && noKp.invalid"
+              maxlength="12"
+              onlyNumbers
+              kpValidator
+              required
+              [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+            />
+            <div *ngIf="f.submitted && noKp.invalid" class="invalid-feedback">
+              <div *ngIf="noKp.errors.required">No. Kad Pengenalan Wajib Diisi</div>
+            </div>
+            <div class="mt-1" *ngIf="(noKp.touched || noKp.dirty) && noKp.errors?.valueInvalid" style="color: #dc3545; font-size: 80%; size: 80%;">
+              No. Kad Pengenalan Kurang Daripada 12
+            </div>
+            <div class="mt-1" *ngIf="(noKp.touched || noKp.dirty) && noKp.errors?.stateCodeInvalid" style="color: #dc3545; font-size: 80%; size: 80%;">
+              Kod Negeri Tidak Sah
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label>No. Telefon*</label>
+            <input
+              class="form-control"
+              name="telefon"
+              [(ngModel)]="getMangsa.mangsa.telefon"
+              placeholder="No. Telefon"
+              #noTel="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && noTel.invalid }"
+              oninput="this.value=this.value.replace(/\D+/g, '');"
+              minlength="9"
+              maxlength="15"
+              required
+              [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+            />
+            <div *ngIf="f.submitted && noTel.invalid" class="invalid-feedback">
+              <div *ngIf="noTel.errors.required">No. Telefon Wajib Diisi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <h6>Maklumat Alamat</h6>
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Alamat 1*</label>
+        <input
+          class="form-control"
+          name="alamat_1"
+          [(ngModel)]="getMangsa.mangsa.alamat_1"
+          placeholder="Alamat 1"
+          #alamat1="ngModel"
+          [ngClass]="{ 'is-invalid': f.submitted && alamat1.invalid }"
+          required
+          [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        />
+        <div *ngIf="f.submitted && alamat1.invalid" class="invalid-feedback">
+          <div *ngIf="alamat1.errors.required">Alamat 1 Wajib Diisi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Alamat 2</label>
+        <input
+          class="form-control"
+          name="alamat_2"
+          [(ngModel)]="getMangsa.mangsa.alamat_2"
+          placeholder="Alamat 2"
+          [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Poskod*</label>
+        <input
+          class="form-control"
+          name="poskod"
+          [(ngModel)]="getMangsa.mangsa.poskod"
+          placeholder="Poskod"
+          #postcode="ngModel"
+          [ngClass]="{ 'is-invalid': f.submitted && postcode.invalid }"
+          oninput="this.value=this.value.replace(/\D+/g, '');"
+          minlength="5"
+          maxlength="5"
+          required
+          [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        />
+        <div *ngIf="f.submitted && postcode.invalid" class="invalid-feedback">
+          <div *ngIf="postcode.errors.required">Poskod Wajib Diisi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Daerah*</label>
+        <ng-select
+          [items]="districts"
+          bindLabel="nama_daerah"
+          placeholder="Sila Pilih"
+          class="js-example-placeholder-multiple"
+          name="namaDaerah"
+          (change)="setNegeri()"
+          [(ngModel)]="setDaerah"
+          #daerah="ngModel"
+          [ngClass]="{ 'is-invalid': f.submitted && daerah.invalid }"
+          required
+          [disabled]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        ></ng-select>
+        <div *ngIf="f.submitted && daerah.invalid" class="invalid-feedback">
+          <div *ngIf="daerah.errors.required">Daerah Wajib Dipilih</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Negeri*</label>
+        <ng-select
+          [items]="states"
+          bindLabel="nama_negeri"
+          bindValue="id"
+          placeholder="Sila Pilih"
+          class="js-example-placeholder-multiple"
+          name="id_negeri"
+          [(ngModel)]="getMangsa.mangsa.id_negeri"
+          disabled
+        ></ng-select>
+      </div>
+    </div>
+
+    <div class="col-lg-6" *ngIf="showDun == true">
+      <div class="form-group">
+        <label>Dun</label>
+        <ng-select
+          [items]="dun"
+          bindLabel="nama_dun"
+          placeholder="Sila Pilih"
+          class="js-example-placeholder-multiple"
+          name="namaDun"
+          (change)="setParlimen()"
+          [(ngModel)]="setDun"
+          [disabled]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        ></ng-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="showDun == true">
+    <div class="col-lg-6">
+      <div class="form-group">
+        <label>Parlimen</label>
+        <ng-select
+          [items]="parliaments"
+          bindLabel="nama_parlimen"
+          bindValue="id"
+          placeholder="Sila Pilih"
+          class="js-example-placeholder-multiple"
+          name="id_parlimen"
+          [(ngModel)]="getMangsa.mangsa.id_parlimen"
+          disabled
+        ></ng-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="form-group mb-3">
+        <label>Catatan</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          name="catatan"
+          [(ngModel)]="getMangsa.mangsa.catatan"
+          placeholder="Catatan..."
+          [readonly]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <h6>Varifikasi Urusetia</h6>
+  <div class="row mt-1">
+    <div class="col-lg-12">
+      <div class="row form-group custom-radio-ml ml-2">
+        <div class="radio radio-primary mr-4">
+          <input
+            id="radio44"
+            type="radio"
+            name="status_verifikasi"
+            [value]="1"
+            [(ngModel)]="getMangsa.mangsa.status_verifikasi"
+          />
+          <label for="radio44">Sudah</label>
+        </div>
+
+        <div class="radio radio-primary">
+          <input
+            id="radio55"
+            type="radio"
+            name="status_verifikasi"
+            [value]="0"
+            [(ngModel)]="getMangsa.mangsa.status_verifikasi"
+            [disabled]="!_appSession.isGranted('Halaman.Mangsa.Edit')"
+          />
+          <label for="radio55">Belum</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-end mr-1">
+    <button type="button" class="btn btn-light pull-right mr-2" [routerLink]="['/app/mangsa/senarai']">
+      Kembali
+    </button>
+    <button *ngIf="_appSession.isGranted('Halaman.Mangsa.Edit')" class="btn btn-primary pull-right" type="submit">
+      Simpan
+    </button>
+  </div>
+</form>

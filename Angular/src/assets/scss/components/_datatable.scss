@@ -1,0 +1,96 @@
+/**=====================
+    30. Data-table CSS Start
+==========================**/
+code{
+  &.option{
+    color: $danger-color !important;
+  }
+  &.api{
+    color: $success-color !important;
+  }
+}
+
+// Datatable extension
+.product-table{
+  th{
+    &:last-child{
+      min-width: 120px;
+    }
+  }
+  h6{
+    font-weight: 600;
+    color: $dark-color;
+  }
+}
+table{
+  &.dataTable{
+    &.display {
+      tbody {
+        tr{
+          &.odd {
+            > .sorting_1{
+              background-color: $light;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.noscroll{
+  .datatable-footer{
+    .datatable-footer-inner{
+      height: auto !important;
+    }
+  }
+}
+.selection-datatable {
+  .table-responsive {
+    ng2-smart-table-pager {
+      margin-top: 0 !important;
+    }
+  }
+}
+.custom-datatable {
+  input {
+    padding:8px;
+    margin-bottom: 30px;
+    border: 1px solid $light-semi-gray;
+    width:30%;
+    color: $light-text;
+    &::placeholder {
+      color: $light-text;
+    }
+  }
+  .datatable-icon-right {
+    &:before {
+      content: "\f054";
+      font-family: $font-awesome !important;
+      font-size: 10px;
+    }
+  }
+  .datatable-icon-left {
+    &:before {
+      content: "\f053";
+      font-family: $font-awesome !important;
+      font-size: 10px;
+    }
+  }
+  .datatable-icon-prev {
+    &:before {
+      content: "\f100";
+      font-family: $font-awesome !important;
+      font-size: 14px;
+    }
+  }
+  .datatable-icon-skip {
+    &:before {
+      content: "\f101";
+      font-family: $font-awesome !important;
+      font-size: 14px;
+    }
+  }
+}
+/**=====================
+     30. Data-table CSS Ends
+==========================**/

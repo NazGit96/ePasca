@@ -1,0 +1,91 @@
+<div class="modal-header">
+	<h5 class="modal-title" *ngIf="name === 'add'">Tambah Maklumat Tabung</h5>
+	<h5 class="modal-title" *ngIf="name === 'edit'">Kemaskini Maklumat Tabung</h5>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<form class="form theme-form" name="form" #f="ngForm" (ngSubmit)="f.form.valid && save()" novalidate focusInvalidInput autocomplete="off">
+  <div class="modal-body">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Nama Tabung*</label>
+					<input
+            class="form-control"
+            name="nama_tabung"
+            type="text"
+            [(ngModel)]="createTabung.nama_tabung"
+            #namaTabung="ngModel"
+				    [ngClass]="{ 'is-invalid': f.submitted && namaTabung.invalid }"
+            placeholder="Nama Tabung"
+            required
+          />
+          <div *ngIf="f.submitted && namaTabung.invalid" class="invalid-feedback">
+            <div *ngIf="namaTabung.errors.required">Nama Tabung Wajib Diisi</div>
+          </div>
+				</div>
+			</div>
+
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Kategori Tabung*</label>
+          <ng-select
+            [items]="kategori_tabung"
+            bindLabel="nama_kategori"
+            bindValue="id"
+            placeholder="Sila Pilih"
+            class="js-example-placeholder-multiple"
+            name="id_status"
+            [(ngModel)]="createTabung.kategori_tabung"
+            #kategoriTabung="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && kategoriTabung.invalid }"
+            required
+          ></ng-select>
+          <div *ngIf="f.submitted && kategoriTabung.invalid" class="invalid-feedback">
+            <div *ngIf="kategoriTabung.errors.required">Kategori Tabung Wajib Dipilih</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Jumlah Dana Awal (RM)*</label>
+          <input
+            class="form-control"
+            type="text"
+            name="danaAwal"
+            [(ngModel)]="createTabung.dana_awal"
+            #danaAwal="ngModel"
+				    [ngClass]="{ 'is-invalid': f.submitted && danaAwal.invalid }"
+            placeholder="Jumlah Dana Awal"
+            required
+            currencyMask
+            [options]="{ prefix: 'RM ', align: 'left' }"
+            autocomplete="off"
+          />
+          <div *ngIf="f.submitted && danaAwal.invalid" class="invalid-feedback">
+            <div *ngIf="danaAwal.errors.required">Jumlah Dana Awal Wajib Diisi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<label>Catatan</label>
+				<textarea class="form-control" name="catatan" [(ngModel)]="createTabung.catatan" placeholder="Catatan..." rows="3"></textarea>
+			</div>
+		</div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Tutup</button>
+      <button type="submit" class="btn btn-primary">Simpan</button>
+    </div>
+  </div>
+</form>
+
+

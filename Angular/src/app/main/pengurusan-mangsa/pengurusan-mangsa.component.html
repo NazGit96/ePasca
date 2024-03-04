@@ -1,0 +1,304 @@
+<app-breadcrumb [title]="'Senarai Mangsa'" [items]="['Pengurusan Mangsa']" [active_item]="'Senarai'"></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="row mb-1">
+						<div class="col-6 justify-content-start pl-0">
+							<div class="faq-form">
+								<input class="form-control" type="text" name="searchVictim" placeholder="Carian..."
+									(keyup)="applyFilter($event.target.value)" [(ngModel)]="filterString" />
+								<i class="search-icon" data-feather="search"></i>
+							</div>
+						</div>
+
+						<div class="col-2 justify-content-between pl-0">
+							<button type="button" class="btn btn-primary" (click)="isCollapsed = !isCollapsed"
+								[attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"
+								title="Carian Lanjut" style="font-weight: 500">
+								<i class="fa fa-filter"></i>
+							</button>
+						</div>
+
+						<div class="col-4 justify-content-end pr-0 pl-0">
+							<div ngbDropdown class="btn-group pull-right mr-1" role="group"
+								*ngIf="_appSession.isGranted('Halaman.Mangsa.Tambah')">
+								<button type="button" class="btn btn-primary dropdown-toggle" id="dropdownBasic1"
+									ngbDropdownToggle>
+									<i class="fa fa-plus mr-2"></i>
+									<b>Tambah</b>
+								</button>
+								<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+									<button class="dropdown-item border-bottom border-1"
+										[routerLink]="['/app/mangsa/tambah']">Manual
+									</button>
+									<button class="dropdown-item" (click)="addExcelModal()">Muat naik Pukal</button>
+									<button class="dropdown-item" (click)="exportTemplat()">Muat turun Templat</button>
+								</div>
+							</div>
+							<div ngbDropdown class="btn-group pull-right mr-1" role="group"
+								*ngIf="_appSession.isGranted('Halaman.Mangsa.Edit')">
+								<button type="button" class="btn btn-primary dropdown-toggle" id="dropdownBasic1"
+									ngbDropdownToggle>
+									<span class="mr-1 badge badge-pill badge-light">{{idMangsa?.length}} </span>
+									<b>Kemaskini</b>
+								</button>
+								<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+									<button class="dropdown-item" (click)="editBencanaModal()"
+										*ngIf="_appSession.isGranted('Halaman.Mangsa.Bencana')">Maklumat Bencana
+									</button>
+									<button class="dropdown-item" (click)="editIhsanModal()"
+										*ngIf="_appSession.isGranted('Halaman.Mangsa.BWI')">Bantuan Wang Ihsan
+									</button>
+									<button class="dropdown-item" (click)="multipleVerification()"
+										*ngIf="_appSession.isGranted('Halaman.Mangsa.Edit')">Verifikasi
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row mb-2">
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-lg-12">
+									<div id="collapseExample" [ngbCollapse]="!isCollapsed">
+										<form>
+											<div class="row mt-2">
+												<div class="col-lg-4">
+													<div class="form-group">
+														<label>Sumber</label>
+														<ng-select [items]="agencies" bindLabel="nama_agensi"
+															bindValue="id" placeholder="Sila Pilih"
+															class="js-example-placeholder-multiple" name="namaAgensi"
+															[(ngModel)]="filterAgensi"></ng-select>
+													</div>
+												</div>
+												<div class="col-lg-4">
+													<div class="form-group">
+														<label>Negeri</label>
+														<ng-select [items]="states" bindLabel="nama_negeri"
+															bindValue="id" placeholder="Sila Pilih"
+															class="js-example-placeholder-multiple" name="namaNegeri"
+															[(ngModel)]="filterNegeri"></ng-select>
+													</div>
+												</div>
+												<div class="col-lg-4">
+													<div class="form-group">
+														<label>Jenis Bantuan</label>
+														<ng-select [items]="filterOptions"
+															placeholder="Sila Pilih" name="searchBencana"
+															bindLabel="search_label" bindValue="search_value"
+															(change)="applyFilter(selectedFilter)"
+															[(ngModel)]="selectedFilter">
+														</ng-select>
+													</div>
+												</div>
+											</div>
+											<div class="row mt-2">
+
+												<div class="col-lg-3 pr-1">
+													<div
+														class="form-group custom-datepicker custom-datepicker-dropdown">
+														<label>Tarikh Daftar</label>
+														<div class="input-group">
+															<input class="form-control" placeholder="DD/MM/YYYY"
+																name="dp1" [(ngModel)]="tarikhMula" ngbDatepicker
+																#b="ngbDatepicker"
+																style="border: 1px solid #efefef !important;">
+															<div class="input-group-append">
+																<button class="btn btn-light pr-2 pl-2"
+																	(click)="b.toggle()" type="button"><i
+																		class="fa fa-calendar"></i></button>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-lg-3 pl-1">
+													<div
+														class="form-group custom-datepicker custom-datepicker-dropdown">
+														<div class="input-group pt-4 mt-1">
+															<input class="form-control" placeholder="DD/MM/YYYY"
+																name="dp2" [(ngModel)]="tarikhTamat" ngbDatepicker
+																#c="ngbDatepicker"
+																style="border: 1px solid #efefef !important;"
+																[disabled]="tarikhMula == undefined">
+															<div class="input-group-append">
+																<button class="btn btn-light pr-2 pl-2"
+																	(click)="c.toggle()" type="button"
+																	[disabled]="tarikhMula == undefined">
+																	<i class="fa fa-calendar"></i>
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row no-gutters justify-content-end mb-2">
+												<button class="btn btn-light mr-2" type="reset" (click)="resetFilter()">
+													<i class="fa fa-refresh mr-2"></i>
+													<b>Reset</b>
+												</button>
+
+												<button class="btn btn-primary pull-right" type="button"
+													(click)="getVictim()">
+													<i class="fa fa-search mr-2"></i>
+													<b>Cari</b>
+												</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row align-items-center">
+						<div class="primeng-datatable-container">
+							<p-table #dataTable styleClass="p-datatable-striped" [resizableColumns]="true"
+								(onLazyLoad)="getVictim($event)" [value]="primengTableHelper.records"
+								rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false"
+								[lazy]="true" [loading]="primengTableHelper.isLoading" [scrollable]="true"
+								ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+								[resizableColumns]="primengTableHelper.resizableColumns">
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width: 40px"
+											*ngIf="_appSession.isGranted('Halaman.Mangsa.Tambah') || _appSession.isGranted('Halaman.Mangsa.Edit')">
+											<input class="checkbox" type="checkbox"
+												(change)="checkedAll($event.target.checked)" [checked]="checkAll">
+										</th>
+										<th style="width: 159px" pSortableColumn="no_kp">
+											Kad Pengenalan
+											<p-sortIcon field="no_kp"></p-sortIcon>
+										</th>
+										<th style="width: 150px" pSortableColumn="nama">
+											Nama KIR
+											<p-sortIcon field="nama"></p-sortIcon>
+										</th>
+										<th style="width: 100px" pSortableColumn="isi_rumah">
+											Bil. AIR
+											<p-sortIcon field="isi_rumah"></p-sortIcon>
+										</th>
+										<th style="width: 158px" pSortableColumn="jumlah_bantuan">
+											Jumlah Bantuan
+											<p-sortIcon field="jumlah_bantuan"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="nama_negeri">
+											Negeri
+											<p-sortIcon field="nama_negeri"></p-sortIcon>
+										</th>
+										<!-- <th style="width: 170px" pSortableColumn="nama_agensi">
+											Sumber
+											<p-sortIcon field="nama_agensi"></p-sortIcon>
+										</th> -->
+										<th style="width: 170px" pSortableColumn="id_bencana">
+											Jenis Bantuan
+											<p-sortIcon field="id_bencana"></p-sortIcon>
+										</th>
+										<th style="width: 170px" pSortableColumn="tarikh_cipta">
+											Tarikh Daftar
+											<p-sortIcon field="tarikh_cipta"></p-sortIcon>
+										</th>
+										<th style="width: 112px" pSortableColumn="status_verifikasi">
+											Varifikasi
+											<p-sortIcon field="status_verifikasi"></p-sortIcon>
+										</th>
+										<th style="width: 130px">Tindakan</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-record="$implicit">
+									<tr>
+										<td style="width: 40px"
+											*ngIf="_appSession.isGranted('Halaman.Mangsa.Tambah') || _appSession.isGranted('Halaman.Mangsa.Edit')">
+											<input class="checkbox" name="{{ record.id }}" type="checkbox"
+												id="{{record.id}}"
+												(change)="pilihMangsa(record.id, $event.target.checked)"
+												[checked]="checked" [checked]="checkMangsaExist(record.id)">
+										</td>
+										<td style="width: 159px">
+											<span class="p-column-title">Kad Pengenalan</span>
+											{{record.no_kp}}
+										</td>
+										<td style="width: 150px">
+											<span class="p-column-title">Nama KIR</span>
+											{{record.nama | titlecase}}
+										</td>
+										<td style="width: 100px">
+											<span class="p-column-title">Bil. AIR</span>
+											{{record.isi_rumah}}
+										</td>
+										<td style="width: 158px">
+											<span class="p-column-title">Jumlah Bantuan</span>
+											RM {{record.jumlah_bantuan | number: '1.2-2'}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Negeri</span>
+											{{record.nama_negeri | titlecase}}
+										</td>
+										<!-- ////////////////////////////////////////// -->
+										<td style="width: 170px; text-transform: uppercase;">
+											<span class="p-column-title">Jenis Bantuan</span>
+											{{record.nama_agensi | titlecase}}
+										</td>
+										<!-- ///////////////////////////////////////// -->
+										<!-- <td style="width: 170px">
+											<span class="p-column-title">Sumber</span>
+											{{record.nama_agensi | titlecase}}
+										</td> -->
+										<td style="width: 170px">
+											<span class="p-column-title">Tarikh Daftar</span>
+											{{record.tarikh_cipta | date:'dd-MM-yyyy'}}
+										</td>
+										<td style="width: 112px">
+											<span class="p-column-title">Varifikasi</span>
+											<label *ngIf="record.status_verifikasi == 1"
+												class="badge badge-success">Sudah</label>
+											<label *ngIf="record.status_verifikasi == 0"
+												class="badge badge-danger">Belum</label>
+										</td>
+										<td style="width: 130px">
+											<div ngbDropdown class="btn-group" role="group" container="body">
+												<button type="button"
+													class="btn btn-primary btn-primeng dropdown-toggle" id="action"
+													ngbDropdownToggle>
+													<i class="fa fa-cog"></i>
+													<span class="caret"></span>
+													Tindakan
+												</button>
+												<div ngbDropdownMenu aria-labelledby="action">
+													<button class="dropdown-item" [routerLink]="['/app/mangsa/edit']"
+														[queryParams]="{id: record.id}">
+														Lihat
+													</button>
+													<button class="dropdown-item" (click)="deleteMangsa(record.id)"
+														*ngIf="_appSession.isGranted('Halaman.Mangsa.Hapus')">
+														Padam
+													</button>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+							<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">Tiada Data
+							</div>
+							<div class="primeng-paging-container justify-content-between">
+								<p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+									(onPageChange)="getVictim($event)"
+									[totalRecords]="primengTableHelper.totalRecordsCount"
+									[rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"></p-paginator>
+								<span class="total-records-count">
+									Jumlah: {{ primengTableHelper.totalRecordsCount}}
+									<!-- Jumlah: 126277 -->
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

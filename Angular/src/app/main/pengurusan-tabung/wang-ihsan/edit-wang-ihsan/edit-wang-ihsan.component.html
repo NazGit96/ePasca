@@ -1,0 +1,138 @@
+<app-breadcrumb
+  [title]="'Kemaskini Bantuan Wang Ihsan'"
+  [items]="['Pengurusan Tabung', 'BWI']"
+  [active_item]="'Kemaskini'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+          <form class="form theme-form" name="form" #f="ngForm" (ngSubmit)="save()" novalidate focusInvalidInput>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jenis BWI*</label>
+                  <ng-select
+                    [items]="jenisBwi"
+                    bindLabel="nama_jenis_bwi"
+                    bindValue="id"
+                    placeholder="Sila Pilih"
+                    class="js-example-placeholder-multiple"
+                    name="jenis_bwi"
+                    [(ngModel)]="edit.tabung_bwi.id_jenis_bwi"
+                    #namaJenisBwi="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && namaJenisBwi.invalid }"
+                    required
+                    disabled
+                  ></ng-select>
+                  <div *ngIf="f.submitted && namaJenisBwi.invalid" class="invalid-feedback">
+                    <div *ngIf="namaJenisBwi.errors.required">Jenis BWI Wajib Dipilih</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Bencana</label>
+                  <div class="input-group">
+                    <input
+                      class="form-control"
+                      placeholder="Nama Bencana"
+                      name="bencana"
+                      [(ngModel)]="edit.tabung_bwi.nama_bencana"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+                <label>Tarikh Bencana</label>
+                <div class="input-group">
+                  <input
+                    class="form-control"
+                    placeholder="DD/MM/YYYY"
+                    name="dp"
+                    [(ngModel)]="tarikh_bencana"
+                    disabled
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="row no-gutters mt-3">
+              <h6>Maklumat Bantuan</h6>
+            </div>
+            <app-tambah-edit-bantuan
+              [idBwi]="idBwi" [idBencana]="id_bencana" [idJenisBwi]="idJenisBwi" [jumlahBantuan]="jumlah_bantuan" [jumlahPembayaran]="jumlah_keseluruhan_bayaran" (jumlah_bantuan_padam)="getJumlahBantuanPadam($event)" (jumlah_bantuan_tambah)="getJumlahBantuanTambah($event)">
+            </app-tambah-edit-bantuan>
+
+            <app-tambah-edit-pembayaran [idBwi]="idBwi" [jumlahBayaranBwi]="jumlah_keseluruhan_bayaran" (idBayaranSkb)="getIdBayaranSkb($event)" (idBayaranTerus)="getIdBayaranTerus($event)" (id_kelulusan)="getIdKelulusan($event)" (jumlahBayaran)="getJumlahBayaran($event)" (jumlah_bayaran_padam)="getJumlahBayaranPadam($event)"></app-tambah-edit-pembayaran>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Pembayaran (RM)</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_pembayaran"
+                    placeholder="Jumlah Pembayaran"
+                    value="{{jumlah_keseluruhan_bayaran | number: '1.2-2'}}"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Bantuan (RM)</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_bantuan"
+                    placeholder="Jumlah Bantuan"
+                    value="{{jumlah_bantuan | number: '1.2-2'}}"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Jumlah Pulangan (RM)</label>
+                  <input
+                    class="form-control"
+                    name="jumlah_pulangan"
+                    placeholder="Jumlah Pulangan"
+                    value="{{edit.jumlah_dipulangkan | number: '1.2-2'}}"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row no-gutters justify-content-end">
+              <button
+                class="btn btn-light mr-2"
+                [routerLink]="['/app/tabung/bwi/senarai']"
+                type="button"
+              >
+                Kembali
+              </button>
+              <button
+                class="btn btn-primary pull-right"
+                type="submit"
+              >
+                Simpan
+              </button>
+            </div>
+          </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,36 @@
+<app-breadcrumb
+	[title]="'Kemaskini Kelulusan'"
+	[items]="['Pengurusan Tabung', 'Kelulusan']"
+	[active_item]="'Kemaskini'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<ul ngbNav #nav="ngbNav" [(activeId)]="tabId" class="nav-tabs">
+						<li [ngbNavItem]="1">
+							<a ngbNavLink>Maklumat Kelulusan</a>
+							<ng-template ngbNavContent>
+								<app-maklumat-surat [idKelulusan]="id" [idTabung]="idTabung" [tabungKemaskiniKelulusan]="tabungKemaskiniKelulusan"></app-maklumat-surat>
+							</ng-template>
+						</li>
+						<li [ngbNavItem]="2">
+							<a ngbNavLink>Perbelanjaan</a>
+							<ng-template ngbNavContent>
+								<app-perbelanjaan [idKelulusan]="id"></app-perbelanjaan>
+							</ng-template>
+						</li>
+						<li [ngbNavItem]="3">
+							<a ngbNavLink>Peruntukan Diambil</a>
+							<ng-template ngbNavContent>
+								<app-peruntukan-diambil-list [idKelulusan]="id"></app-peruntukan-diambil-list>
+							</ng-template>
+						</li>
+					</ul>
+					<div [ngbNavOutlet]="nav" class="mt-2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

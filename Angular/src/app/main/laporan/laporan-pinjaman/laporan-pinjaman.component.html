@@ -1,0 +1,270 @@
+<app-breadcrumb
+	[title]="'Laporan Penerima Bantuan Pinjaman Khas'"
+	[items]="['Laporan', 'Bantuan']"
+	[active_item]="'Pinjaman'"
+></app-breadcrumb>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="row mb-1">
+            <div class="col-lg-6 col-sm-10 justify-content-start pl-0">
+              <div class="faq-form">
+                <input
+                  class="form-control"
+                  type="text"
+                  name="searchPinjaman"
+                  placeholder="Carian..."
+                  (keyup)="applyFilter($event.target.value)"
+                  [(ngModel)]="filterString"
+                />
+                <i class="search-icon" data-feather="search"></i>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-2 justify-content-between pl-0">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed"
+                aria-controls="collapseExample"
+                ngbTooltip="Carian Lanjut"
+                style="font-weight: 500"
+              >
+                <i class="fa fa-filter"></i>
+              </button>
+            </div>
+
+            <div class="col-lg-4 col-sm-12 justify-content-end p-0">
+              <button type="button" (click)="exportToExcel()" class="btn btn-outline-success pull-right">
+                <i class="fa fa-file-excel-o fa-lg mr-2"></i>
+                <b>Excel</b>
+              </button>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div id="collapseExample" [ngbCollapse]="!isCollapsed">
+                    <form>
+                      <div class="row mt-2">
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label>Negeri</label>
+                            <ng-select
+                              [items]="states"
+                              bindLabel="nama_negeri"
+                              bindValue="id"
+                              placeholder="Sila Pilih"
+                              class="js-example-placeholder-multiple"
+                              name="namaNegeri"
+                              [(ngModel)]="filterNegeri"
+                              (ngModelChange)="getDaerah()"
+                            ></ng-select>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label>Daerah</label>
+                            <ng-select
+                              [items]="districts"
+                              bindLabel="nama_daerah"
+                              bindValue="id"
+                              placeholder="Sila Pilih"
+                              class="js-example-placeholder-multiple"
+                              name="namaDaerah"
+                              [(ngModel)]="filterDaerah"
+                            ></ng-select>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label>Tahun Cipta</label>
+                            <ng-select
+                              [items]="arrayYear"
+                              bindLabel="years"
+                              bindValue="years"
+                              placeholder="Sila Pilih"
+                              class="js-example-placeholder-multiple"
+                              name="tahunBayaran"
+                              [(ngModel)]="filterYear"
+                            ></ng-select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row justify-content-end mb-3 pr-2">
+                        <button
+                          class="btn btn-light mr-2"
+                          type="reset"
+                          (click)="resetFilter()"
+                        >
+                        <i class="fa fa-refresh mr-2"></i>
+                          <b>Reset</b>
+                        </button>
+
+                        <button
+                          class="btn btn-primary pull-right mr-2"
+                          type="button"
+                          (click)="getPinjamanReport()"
+                        >
+                        <i class="fa fa-search mr-2"></i>
+                          <b>Cari</b>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+					<div class="row align-items-center">
+						<div class="primeng-datatable-container">
+							<p-table
+								#dataTable
+								styleClass="p-datatable-striped"
+								[resizableColumns]="true"
+								(onLazyLoad)="getPinjamanReport($event)"
+								[value]="primengTableHelper.records"
+								rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+								[paginator]="false"
+								[lazy]="true"
+                [loading]="primengTableHelper.isLoading"
+								[scrollable]="true"
+								ScrollWidth="100%"
+								[responsive]="primengTableHelper.isResponsive"
+								[resizableColumns]="primengTableHelper.resizableColumns"
+							>
+								<ng-template pTemplate="header">
+									<tr>
+										<th style="width: 184px" pSortableColumn="nama">
+											Nama Mangsa (KIR)
+											<p-sortIcon field="nama"></p-sortIcon>
+										</th>
+										<th style="width: 159px" pSortableColumn="no_kp">
+											Kad Pengenalan
+											<p-sortIcon field="no_kp"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="alamat_1">
+											Alamat 1
+											<p-sortIcon field="alamat_1"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="alamat_2">
+											Alamat 2
+											<p-sortIcon field="alamat_2"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="nama_daerah">
+											Daerah
+											<p-sortIcon field="nama_daerah"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="nama_negeri">
+											Negeri
+											<p-sortIcon field="nama_negeri"></p-sortIcon>
+										</th>
+										<th style="width: 173px" pSortableColumn="nama_agensi">
+											Pemberi Pinjaman
+											<p-sortIcon field="nama_agensi"></p-sortIcon>
+										</th>
+										<th style="width: 130px" pSortableColumn="sektor">
+											Sektor
+											<p-sortIcon field="sektor"></p-sortIcon>
+										</th>
+										<th style="width: 158px" pSortableColumn="tarikh_mula">
+											Tarikh Pinjaman
+											<p-sortIcon field="tarikh_mula"></p-sortIcon>
+										</th>
+										<th style="width: 171px" pSortableColumn="tempoh_pinjaman">
+											Tempoh Pinjaman
+											<p-sortIcon field="tempoh_pinjaman"></p-sortIcon>
+										</th>
+										<th style="width: 165px" pSortableColumn="jumlah_pinjaman">
+											Jumlah Pinjaman
+											<p-sortIcon field="jumlah_pinjaman"></p-sortIcon>
+										</th>
+                    <th style="width: 150px" pSortableColumn="tarikh_cipta">
+											Tarikh Cipta
+											<p-sortIcon field="tarikh_cipta"></p-sortIcon>
+										</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-record="$implicit">
+									<tr>
+										<td style="width: 184px">
+											<span class="p-column-title">Nama Mangsa (KIR)</span>
+											{{record.nama | titlecase}}
+										</td>
+										<td style="width: 159px">
+											<span class="p-column-title">Kad Pengenalan</span>
+											{{record.no_kp}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Alamat 1</span>
+											{{record.alamat_1 | titlecase}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Alamat 2</span>
+                      {{record.alamat_2? record.alamat_2: '-'}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Daerah</span>
+											{{record.nama_daerah | titlecase}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Negeri</span>
+											{{record.nama_negeri | titlecase}}
+										</td>
+										<td style="width: 173px">
+											<span class="p-column-title">Pemberi Pinjaman</span>
+											{{record.nama_agensi | titlecase}}
+										</td>
+										<td style="width: 130px">
+											<span class="p-column-title">Sektor</span>
+                      {{record.sektor? record.sektor: '-'}}
+										</td>
+										<td style="width: 158px">
+											<span class="p-column-title">Tarikh Pinjaman</span>
+											{{record.tarikh_mula | date:'dd-MM-yyyy'}}
+										</td>
+										<td style="width: 171px">
+											<span class="p-column-title">Tempoh Pinjaman</span>
+											{{record.tempoh_pinjaman | titlecase}}
+										</td>
+										<td style="width: 165px">
+											<span class="p-column-title">Jumlah Pinjaman</span>
+                      <label *ngIf="record.jumlah_pinjaman">RM {{record.jumlah_pinjaman | number: '1.2-2'}}</label>
+                      <label *ngIf="!record.jumlah_pinjaman">RM 0.00</label>
+										</td>
+                    <td style="width: 150px">
+											<span class="p-column-title">Tarikh Cipta</span>
+											{{record.tarikh_cipta | date:'dd-MM-yyyy'}}
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+							<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">Tiada Data</div>
+							<div class="primeng-paging-container justify-content-between">
+								<p-paginator
+									[rows]="primengTableHelper.defaultRecordsCountPerPage"
+									#paginator
+									(onPageChange)="getPinjamanReport($event)"
+									[totalRecords]="primengTableHelper.totalRecordsCount"
+									[rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage"
+								></p-paginator>
+								<span class="total-records-count">
+									Jumlah: {{ primengTableHelper.totalRecordsCount}}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

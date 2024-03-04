@@ -1,0 +1,117 @@
+<div class="modal-header">
+	<h5 class="modal-title" *ngIf="name === 'add'">Tambah Maklumat Bencana</h5>
+	<h5 class="modal-title" *ngIf="name === 'edit'">Kemaskini Maklumat Bencana</h5>
+	<button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+
+<form class="form theme-form" name="form" #f="ngForm" focusInvalidInput (ngSubmit)="f.form.valid && save()" novalidate>
+  <div class="modal-body">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Bencana*</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="Bencana"
+              name="bencana"
+              [(ngModel)]="addBencana.nama_bencana"
+              #namaBencana="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && namaBencana.invalid }"
+              required
+              readonly
+            />
+            <div class="input-group-append" *ngIf="_appSession.isGranted('Halaman.Mangsa.Bencana.Edit') || _appSession.isGranted('Halaman.Mangsa.Bencana.Tambah')">
+              <button class="btn btn-primary" (click)="pilihBencana()" type="button">
+                <i class="fa fa-search text-white"></i>
+              </button>
+            </div>
+            <div *ngIf="f.submitted && namaBencana.invalid" class="invalid-feedback">
+              <div *ngIf="namaBencana.errors.required">Bencana Wajib Dipilih</div>
+            </div>
+          </div>
+				</div>
+			</div>
+
+      <div class="form-group col-lg-6 custom-datepicker custom-datepicker-dropdown">
+        <label>Tarikh Bencana</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="DD/MM/YYYY"
+            name="dp3"
+            [(ngModel)]="modelBencana"
+            ngbDatepicker
+            #d3="ngbDatepicker"
+            style="border-color: #efefef;"
+            readonly
+          >
+        </div>
+      </div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Status Berpindah*</label>
+					<ng-select
+						[items]="evacuates"
+						bindLabel="pindah"
+						bindValue="id"
+						placeholder="Sila Pilih"
+						class="js-example-placeholder-multiple"
+						name="id_pindah"
+						[(ngModel)]="addBencana.id_pindah"
+						#statusPindah="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && statusPindah.invalid }"
+						required
+						[disabled]="!_appSession.isGranted('Halaman.Mangsa.Bencana.Edit') || !_appSession.isGranted('Halaman.Mangsa.Bencana.Tambah')"
+					></ng-select>
+					<div *ngIf="f.submitted && statusPindah.invalid" class="invalid-feedback">
+						<div *ngIf="statusPindah.errors.required">Status Berpindah Wajib Dipilih</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6" *ngIf="addBencana.id_pindah == 2" [@fadeVerticalAnimation]>
+				<div class="form-group">
+					<label>Nama Pusat*</label>
+					<input
+						class="form-control"
+						name="nama_pusat_pemindahan"
+						[(ngModel)]="addBencana.nama_pusat_pemindahan"
+						placeholder="Nama Pusat"
+						#namaPusat="ngModel"
+						[ngClass]="{ 'is-invalid': f.submitted && namaPusat.invalid }"
+						required
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.Bencana.Edit') || !_appSession.isGranted('Halaman.Mangsa.Bencana.Tambah')"
+					/>
+					<div *ngIf="f.submitted && namaPusat.invalid" class="invalid-feedback">
+						<div *ngIf="namaPusat.errors.required">Nama Pusat Wajib Diisi</div>
+					</div>
+				</div>
+			</div>
+
+      <div class="col-lg-6">
+				<div class="form-group">
+					<label>Masalah Dihadapi</label>
+					<textarea
+						class="form-control"
+						rows="3"
+						name="masalah"
+						[(ngModel)]="addBencana.masalah"
+						placeholder="Masalah yang dihadapi..."
+						[readonly]="!_appSession.isGranted('Halaman.Mangsa.Bencana.Edit') || !_appSession.isGranted('Halaman.Mangsa.Bencana.Tambah')"
+					></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close(false)">Tutup</button>
+		<button *ngIf="_appSession.isGranted('Halaman.Mangsa.Bencana.Edit') || _appSession.isGranted('Halaman.Mangsa.Bencana.Tambah')" type="submit" class="btn btn-primary">Simpan</button>
+  </div>
+</form>
